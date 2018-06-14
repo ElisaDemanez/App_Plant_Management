@@ -1,0 +1,3 @@
+Could do : 
+
+Add the keyboard support for the autosuggestion component, according to tutorial.
