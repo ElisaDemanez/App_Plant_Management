@@ -13,7 +13,10 @@
           <select id="seller" v-model="selectedSeller" >
             <option v-for="seller in sellers" :value="seller[0]" :key="seller[0]"> {{ seller[1] }}</option>
           </select> -->
-      <AutocompleteVendeur :UnfilteredData="sellers"/>
+      <AutocompleteVendeur
+      id="autocompleteVendeur"
+      v-model="selectedOption"
+       :UnfilteredData="sellers"/>
         <br>
       <label for='name'  >Nom</label>
       <input id='name' type='text' v-model='name' >
@@ -73,6 +76,7 @@ export default {
         this.increaseID();
 
         // this.checkSeller();
+ 
         this.setPlant();
         this.name = "";
         // .database().ref().child('posts').push().key;

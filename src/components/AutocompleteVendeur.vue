@@ -43,7 +43,8 @@ export default {
       this.open = false;
       // Don't remember why the [1][1], but that's the name
       this.searchText = suggestion[1][1];
-      this.$emit("input", suggestion[0]);
+      // magically changes the value to the id ([1][0])
+      this.$emit("input", suggestion[1][0]);
     },
     setOpen(isOpen) {
       this.open = isOpen;
@@ -95,6 +96,9 @@ export default {
   z-index: 2;
 }
 
+li {
+  display:block;
+}
 .dropdown.open .suggestion-list {
   display: block;
 }
