@@ -26,7 +26,7 @@
 <script>
 /* eslint-disable */
 import { connection } from "@/components/firebase.js";
-import AutocompleteDropdown from "@/components/AutocompleteDropdown.vue";
+import AutocompleteDropdown from "@/components/utilitaries/AutocompleteDropdown.vue";
 
 export default {
   name: "Ajouter",
@@ -67,10 +67,10 @@ export default {
         this.errors.push("Please select a seller in the list");
       else {
         this.increaseID();
-        // this.setPlant();
+        this.setPlant();
         this.name = "";
         // alert('youdid it')
-        // this.$router.push('/')
+        this.$router.push('/')
         // .database().ref().child('posts').push().key;
       }
     },
