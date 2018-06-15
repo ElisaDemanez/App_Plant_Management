@@ -1,17 +1,30 @@
 
 <template>
+    <div>
+      
  <!--alll credits to https://designhammer.com/blog/reusable-vuejs-components-part-3-autocomplete-dropdown  -->
-    <div class="dropdown" :class="{'open' : open}" >
-      <input type="text" 
-      v-model="searchText"
-      @input="searchChanged"
-      @keydown.esc="setOpen(false)"
-       @blur="setOpen(false)"
-    />
-      <a class="toggle" @mousedown.prevent @click="setOpen(!open)">
-      <span class="arrow-up">▲</span>
-      <span class="arrow-down">▼</span>
-    </a>
+  <div class="dropdown" :class="{'open' : open}" >
+    <v-layout row wrap>
+      <v-flex xs10>
+        <v-text-field 
+   
+          id="autocompleteDropdown"
+          label="Seller"
+        v-model="searchText"
+        @input="searchChanged"
+        @keydown.esc="setOpen(false)"
+        @blur="setOpen(false)"
+          />
+      </v-flex>
+      <v-flex xs2>
+    <v-container fill-height>
+          <a class="toggle" @mousedown.prevent @click="setOpen(!open)">
+        <span class="arrow-up">▲</span>
+        <span class="arrow-down">▼</span>
+        </a>
+    </v-container>
+      </v-flex>
+    </v-layout>
     <ul class="suggestion-list">
       <li v-for="(suggestion, index) in matches" :key="index"
       @mousedown.prevent
@@ -20,14 +33,14 @@
       </li>
     </ul>
   </div>
-       
+    </div>
 </template>
 
 <script>
 /* eslint-disable */
 
 export default {
-  name: "AutocompleteVendeur",
+  name: "AutocompleteDropdown",
 
   data() {
     return {
@@ -72,14 +85,11 @@ export default {
 
 
 <style scoped >
-#form {
-  display: flex;
-  flex-direction: column;
-}
-.dropdown {
+
+/* .dropdown {
   display: inline-block;
   position: relative;
-}
+} */
 
 .suggestion-list {
   background-color: rgba(255, 255, 255, 0.95);
