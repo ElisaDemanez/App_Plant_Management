@@ -10,10 +10,10 @@
         </ul>
        </p>
    
-      <AutocompleteDropdown
-      id="AutocompleteSeller"
-      v-model="selectedSeller"
-       :UnfilteredData="sellers"/>
+        <AutocompleteDropdown
+        customId="AutocompleteSeller"
+        v-model="selectedSeller"
+        :UnfilteredData="sellers"/>
         <br>
      
       <v-text-field id='name'  v-model='name' label = 'Subspecies name ' />
@@ -26,14 +26,14 @@
 <script>
 /* eslint-disable */
 import { connection } from "@/components/firebase.js";
-import AutocompleteDropdown from "@/components/AutocompleteDropdown.vue"
+import AutocompleteDropdown from "@/components/AutocompleteDropdown.vue";
 
 export default {
   name: "Ajouter",
-  
+
   components: {
-        AutocompleteDropdown
-    },
+    AutocompleteDropdown
+  },
 
   data() {
     return {
@@ -41,9 +41,7 @@ export default {
       name: "",
       selectedSeller: null,
       aiID: "",
-      sellers: [],
-      // selectedOption: null
-    
+      sellers: []
     };
   },
   firebase: {
@@ -60,22 +58,19 @@ export default {
       });
     });
     this.sellers = sellers;
-    // console.log(sellers);
   },
   methods: {
-   
     formValidation: function(e) {
       this.errors = [];
       if (!this.name) this.errors.push("Name empty.");
+      else if (!this.checkSeller())
+        this.errors.push("Please select a seller in the list");
       else {
         this.increaseID();
-
-        this.checkSeller();
- 
-        this.setPlant();
+        // this.setPlant();
         this.name = "";
-        alert('youdid it')
-        this.$router.push('/')
+        // alert('youdid it')
+        // this.$router.push('/')
         // .database().ref().child('posts').push().key;
       }
     },
@@ -84,9 +79,15 @@ export default {
       connection.ref("aiID").set({ count: String(this.aiID) });
     },
     checkSeller: function() {
-      // console.log(this.db)
-      // var newSellerKey = connection.ref("sellers").push().key;
-      // connection.ref("sellers/" + newSellerKey).set({ name: "kuentz" });
+      var seller = document.getElementById("AutocompleteSeller").value;
+      var isInArray = false;
+      this.sellers.forEach(element => {
+        if (element[1] === seller) {
+          isInArray = true;
+          return;
+        }
+      });
+      return isInArray ? true : false;
     },
     setPlant: function() {
       connection.ref("plants/" + this.aiID).set(
@@ -103,9 +104,6 @@ export default {
         }
       );
     }
-  },
-  computed: {
-
   }
 };
 </script>
@@ -116,5 +114,4 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
 </style>
