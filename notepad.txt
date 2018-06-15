@@ -1,0 +1,7 @@
+Could do : 
+
+Add the keyboard support for the autosuggestion component, according to tutorial.
+
+next feature : confirm alert and read
+
+If you select a seller and change its name : his id is still pushed 
