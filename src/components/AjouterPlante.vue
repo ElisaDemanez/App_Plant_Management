@@ -9,17 +9,14 @@
             <li v-for='error in errors' :key="error.id">{{ error }}</li>
         </ul>
        </p>
-        <!-- <label for="seller"> Vendeur  </label>
-          <select id="seller" v-model="selectedSeller" >
-            <option v-for="seller in sellers" :value="seller[0]" :key="seller[0]"> {{ seller[1] }}</option>
-          </select> -->
-      <AutocompleteVendeur
-      id="autocompleteVendeur"
+   
+      <AutocompleteDropdown
+      id="AutocompleteSeller"
       v-model="selectedSeller"
        :UnfilteredData="sellers"/>
         <br>
-      <label for='name'  >Nom</label>
-      <input id='name' type='text' v-model='name' >
+     
+      <v-text-field id='name'  v-model='name' label = 'Subspecies name ' />
       <!-- <p>{{db[0].count}}</p> -->
       <input type='submit' value='Submit'  >
     </form>
@@ -29,13 +26,13 @@
 <script>
 /* eslint-disable */
 import { connection } from "@/components/firebase.js";
-import AutocompleteVendeur from "@/components/AutocompleteVendeur.vue"
+import AutocompleteDropdown from "@/components/AutocompleteDropdown.vue"
 
 export default {
   name: "Ajouter",
   
   components: {
-        AutocompleteVendeur
+        AutocompleteDropdown
     },
 
   data() {
@@ -73,12 +70,12 @@ export default {
       else {
         this.increaseID();
 
-        // this.checkSeller();
+        this.checkSeller();
  
         this.setPlant();
         this.name = "";
         alert('youdid it')
-        this.$router.go('Home')
+        this.$router.push('/')
         // .database().ref().child('posts').push().key;
       }
     },
@@ -87,6 +84,7 @@ export default {
       connection.ref("aiID").set({ count: String(this.aiID) });
     },
     checkSeller: function() {
+      // console.log(this.db)
       // var newSellerKey = connection.ref("sellers").push().key;
       // connection.ref("sellers/" + newSellerKey).set({ name: "kuentz" });
     },
