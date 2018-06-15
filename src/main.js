@@ -3,11 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-// import Vuetify from 'vuetify'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 var VueFire = require('vuefire')
 var firebase = require('firebase')
 
-// Vue.use(Vuetify)
+
+Vue.use(Vuetify)
 // explicit installation required in module environments
 Vue.use(VueFire)
 
