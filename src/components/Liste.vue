@@ -1,18 +1,16 @@
 <template>
   <div class="liste">
       <ul class="list">
-      <!-- <li v-for="(item, index) in plantList" :key="index"> -->
-        <!-- {{ item[0] }}
-      </li> -->
+     
        <v-list two-line>
-          <template v-for="(item, index) in plantList">
-            <v-subheader v-if="item.header" :key="item.header">{{ item.header }}</v-subheader>
-            <v-divider v-else-if="item.divider" :inset="item.inset" :key="index"></v-divider>
-            <v-list-tile v-else :key="item[0]" avatar >
+          <template v-for="(plant, index) in plantList">
+            <v-subheader v-if="plant.header" :key="plant.header">{{ plant.header }}</v-subheader>
+            <v-divider v-else-if="plant.divider" :inset="plant.inset" :key="index"></v-divider>
+            <v-list-tile v-else :key="plant.id" avatar >
           
               <v-list-tile-content>
-                <v-list-tile-title v-html="'#'+item[0] +': '+ item[1]"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="item[2]"></v-list-tile-sub-title>
+                <v-list-tile-title v-html="'#'+plant.id +': '+ plant.name"></v-list-tile-title>
+                <v-list-tile-sub-title v-html="plant.seller"></v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
           </template>
@@ -24,18 +22,17 @@
 <script>
 import { connection } from "@/components/firebase.js";
 
-
 export default {
-  name: 'Liste',
-  data () {
+  name: "Liste",
+  data() {
     return {
-      plantList: [],
-    }
-  }, 
+      plantList: []
+    };
+  },
   firebase: {
     db: connection.ref()
   },
-  created () {
+  created() {
     var plants = [];
     // db doest seems to work in mounted
     connection.ref("plants").once("value", function(snapshot) {
@@ -43,17 +40,32 @@ export default {
         var id = childSnapshot.key;
         var name = childSnapshot.val().name;
         var seller = childSnapshot.val().seller;
-        
-         plants.push([id, name,seller]);
+        var plant = {};
+        plant["id"] = id;
+        plant["name"] = name;
+        plant["seller"] = seller;
+        plants.push(plant);
       });
     });
-    console.log(plants)
+    
+    // replace the seller id
+    plants.forEach(plant => {
+  
+      for (const seller in this.db[2]) {
+        if (this.db[2].hasOwnProperty(seller)) {
+          const element = this.db[2][seller];
+
+          if (plant.seller == seller) {
+            plant['seller'] = element.name;
+          }
+        }
+      }
+    });
     this.plantList = plants;
-  },
-}
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
 </style>
