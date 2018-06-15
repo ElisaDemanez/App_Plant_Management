@@ -5,8 +5,8 @@
 
  
    <v-toolbar class="hidden-sm-and-down navbar">
-    <v-toolbar-side-icon></v-toolbar-side-icon>
-    <v-toolbar-title>Title</v-toolbar-title>
+    <!-- <v-toolbar-side-icon></v-toolbar-side-icon>   -->
+    <v-toolbar-title>Plant Management</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items >
         <v-btn flat color="teal" value="Home" :to="{name:'Home'}">
