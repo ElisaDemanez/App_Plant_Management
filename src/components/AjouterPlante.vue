@@ -1,0 +1,122 @@
+
+<template>
+  <div class='ajouter'>
+    
+    <form id="form" @submit='formValidation' method="get" >
+       <p v-if='errors.length'>
+         <b>Please correct the following error(s):</b>
+          <ul>
+            <li v-for='error in errors' :key="error.id">{{ error }}</li>
+        </ul>
+       </p>
+        <!-- <label for="seller"> Vendeur  </label>
+          <select id="seller" v-model="selectedSeller" >
+            <option v-for="seller in sellers" :value="seller[0]" :key="seller[0]"> {{ seller[1] }}</option>
+          </select> -->
+      <AutocompleteVendeur
+      id="autocompleteVendeur"
+      v-model="selectedSeller"
+       :UnfilteredData="sellers"/>
+        <br>
+      <label for='name'  >Nom</label>
+      <input id='name' type='text' v-model='name' >
+      <!-- <p>{{db[0].count}}</p> -->
+      <input type='submit' value='Submit'  >
+    </form>
+  </div>
+</template>
+
+<script>
+/* eslint-disable */
+import { connection } from "@/components/firebase.js";
+import AutocompleteVendeur from "@/components/AutocompleteVendeur.vue"
+
+export default {
+  name: "Ajouter",
+  
+  components: {
+        AutocompleteVendeur
+    },
+
+  data() {
+    return {
+      errors: [],
+      name: "",
+      selectedSeller: null,
+      aiID: "",
+      sellers: [],
+      // selectedOption: null
+    
+    };
+  },
+  firebase: {
+    db: connection.ref()
+  },
+  mounted() {
+    var sellers = [];
+    // db doest seems to work in mounted
+    connection.ref("sellers").once("value", function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+        var childKey = childSnapshot.key;
+        var childData = childSnapshot.val().name;
+        sellers.push([childKey, childData]);
+      });
+    });
+    this.sellers = sellers;
+    // console.log(sellers);
+  },
+  methods: {
+   
+    formValidation: function(e) {
+      this.errors = [];
+      if (!this.name) this.errors.push("Name empty.");
+      else {
+        this.increaseID();
+
+        // this.checkSeller();
+ 
+        this.setPlant();
+        this.name = "";
+        alert('youdid it')
+        this.$router.go('Home')
+        // .database().ref().child('posts').push().key;
+      }
+    },
+    increaseID: function() {
+      this.aiID = parseInt(this.db[0].count) + 1;
+      connection.ref("aiID").set({ count: String(this.aiID) });
+    },
+    checkSeller: function() {
+      // var newSellerKey = connection.ref("sellers").push().key;
+      // connection.ref("sellers/" + newSellerKey).set({ name: "kuentz" });
+    },
+    setPlant: function() {
+      connection.ref("plants/" + this.aiID).set(
+        {
+          name: this.name,
+          seller: this.selectedSeller
+        },
+        function(error) {
+          if (error) {
+            console.log("error", error);
+          } else {
+            console.log("successfull");
+          }
+        }
+      );
+    }
+  },
+  computed: {
+
+  }
+};
+</script>
+
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
+<style scoped >
+#form {
+  display: flex;
+  flex-direction: column;
+}
+
+</style>
