@@ -8,7 +8,7 @@
       <v-flex xs10>
         <v-text-field 
    
-          id="autocompleteDropdown"
+          v-bind:id="customId"
           label="Seller"
         v-model="searchText"
         @input="searchChanged"
@@ -49,8 +49,11 @@ export default {
       open: false
     };
   },
-  props: ["UnfilteredData"],
-  mounted() {},
+  props: {
+    UnfilteredData : Array, 
+    customId : String 
+  },
+
   methods: {
     suggestionSelected(suggestion) {
       this.open = false;
