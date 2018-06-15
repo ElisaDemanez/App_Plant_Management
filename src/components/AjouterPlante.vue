@@ -15,7 +15,7 @@
           </select> -->
       <AutocompleteVendeur
       id="autocompleteVendeur"
-      v-model="selectedOption"
+      v-model="selectedSeller"
        :UnfilteredData="sellers"/>
         <br>
       <label for='name'  >Nom</label>
@@ -42,12 +42,10 @@ export default {
     return {
       errors: [],
       name: "",
-      // selectedSeller: "",
+      selectedSeller: null,
       aiID: "",
       sellers: [],
-      searchText: "",
-      selectedOption: null,
-      open: false,
+      // selectedOption: null
     
     };
   },
