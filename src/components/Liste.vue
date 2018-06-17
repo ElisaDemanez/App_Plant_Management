@@ -16,11 +16,12 @@
           </template>
         </v-list>
     </ul> -->
-      <!-- <v-progress-circular v-if="loading" indeterminate ></v-progress-circular> -->
+
         <v-card >
      
        <v-list two-line>
           <template v-for="(plant, index) in plants">
+            
            <v-list-tile  :key="plant.id" avatar ripple @click="{}">
               <v-list-tile-content :key="index">
                 <v-list-tile-title v-html="'#'+plant.id +': '+ plant.name"></v-list-tile-title>
@@ -40,7 +41,7 @@
 </template>
 
 <script>
-import { plants, sellers } from "@/components/firebase.js";
+import { connection,plants, sellers } from "@/components/firebase.js";
 
 export default {
   name: "Liste",
@@ -52,49 +53,51 @@ export default {
   },
   firebase: {
     plantsRef: plants,
-    sellersRef: sellers
+    sellersRef: sellers,
+    db : connection,
   },
   computed: {
     plants: function() {
-      // here.loading = false;
 
-      console.log("here");
       var plants = [];
       var self = this;
-      console.log(this.plantsRef);
-// get plants 
+      // get plants 
       this.plantsRef.forEach(function(childSnapshot) {
-        var id = childSnapshot.id;
-        var name = childSnapshot.name;
-        var seller = childSnapshot.seller;
         var plant = {};
+        var id = childSnapshot[".key"];
+        var name = childSnapshot.name;
         plant["id"] = id;
         plant["name"] = name;
-        plant["seller"] = seller;
+        
+        // replace the seller id
+        self.sellersRef.forEach(element => {
+          if (childSnapshot.seller == element[".key"]) {
+            plant["seller"] = element.name;
+            return;
+          }
+         
+        });
+         if(!plant['seller']) {
+            plant["seller"] = "seller error";
+            
+          }
         plants.push(plant);
       });
 
-      // replace the seller id
-      plants.forEach(plant => {
-        console.log("plantid", plant.id);
-        self.sellersRef.forEach(element => {
-          console.log(element, element[".key"], element.name);
-           if (plant.seller == element[".key"]) {
-              plant["seller"] = element.name;
-            }
-        });
-        
-      });
-
+      this.loading = false;
       return plants;
     }
   },
   methods: {
     deletePlant: function(id) {
-      console.log(id);
+       var oui =  confirm('Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk ')
+     if(oui) {
+             this.$firebaseRefs.plantsRef.child(id).remove()
+     }
     },
     updatePlant: function(id) {
       console.log(id);
+    
     }
   }
 };
