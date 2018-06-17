@@ -16,11 +16,11 @@
           </template>
         </v-list>
     </ul> -->
-      <v-progress-circular v-if="loading" indeterminate ></v-progress-circular>
-        <v-card v-else>
+      <!-- <v-progress-circular v-if="loading" indeterminate ></v-progress-circular> -->
+        <v-card >
      
        <v-list two-line>
-          <template v-for="(plant, index) in plantList">
+          <template v-for="(plant, index) in plants">
            <v-list-tile  :key="plant.id" avatar ripple @click="{}">
               <v-list-tile-content :key="index">
                 <v-list-tile-title v-html="'#'+plant.id +': '+ plant.name"></v-list-tile-title>
@@ -40,53 +40,54 @@
 </template>
 
 <script>
-import { connection } from "@/components/firebase.js";
+import { plants, sellers } from "@/components/firebase.js";
 
 export default {
   name: "Liste",
   data() {
     return {
-      loading: true,
-      plantList: []
+      loading: true
+      // plantList: []
     };
   },
   firebase: {
-    db: connection.ref()
+    plantsRef: plants,
+    sellersRef: sellers
   },
-  created() {
-    var plants = [];
-    var here = this;
-    connection.ref("plants").once("value", function(snapshot) {
-      console.log("1");
-      snapshot.forEach(function(childSnapshot) {
-        var id = childSnapshot.key;
-        var name = childSnapshot.val().name;
-        var seller = childSnapshot.val().seller;
+  computed: {
+    plants: function() {
+      // here.loading = false;
+
+      console.log("here");
+      var plants = [];
+      var self = this;
+      console.log(this.plantsRef);
+// get plants 
+      this.plantsRef.forEach(function(childSnapshot) {
+        var id = childSnapshot.id;
+        var name = childSnapshot.name;
+        var seller = childSnapshot.seller;
         var plant = {};
         plant["id"] = id;
         plant["name"] = name;
         plant["seller"] = seller;
         plants.push(plant);
-        // replace the seller id
       });
+
+      // replace the seller id
       plants.forEach(plant => {
-        console.log("2");
-
-        for (const seller in here.db[2]) {
-          if (here.db[2].hasOwnProperty(seller)) {
-            const element = here.db[2][seller];
-
-            if (plant.seller == seller) {
+        console.log("plantid", plant.id);
+        self.sellersRef.forEach(element => {
+          console.log(element, element[".key"], element.name);
+           if (plant.seller == element[".key"]) {
               plant["seller"] = element.name;
-              // console.log(plant["seller"]);
             }
-          }
-        }
+        });
+        
       });
-      here.loading = false; 
-    });
 
-    this.plantList = plants;
+      return plants;
+    }
   },
   methods: {
     deletePlant: function(id) {
