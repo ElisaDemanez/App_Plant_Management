@@ -91,7 +91,7 @@ export default {
   methods: {
     deletePlant: function(id) {
        var oui =  confirm('Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk ')
-     if(oui) {
+     if(oui) { 
              this.$firebaseRefs.plantsRef.child(id).remove()
      }
     },
