@@ -44,7 +44,7 @@ export default {
 
   data() {
     return {
-      searchText: "",
+      searchText: " ",
       selectedOption: null,
       open: false
     };
@@ -57,14 +57,16 @@ export default {
   },
   created() {
     // if it's an update
-    if (typeof this.prefilledValue !== "undefined") {
+    // console.log(typeof this.prefilledValue,this.prefilledValue)
+    if (this.prefilledValue) {
+      console.log('created')
       console.log('bjr',this.prefilledValue, this.prefilledText);
-      this.searchText = this.prefilledText;
+      this.searchText= this.prefilledText;
       this.$emit("input", this.prefilledValue);  
      
  
     } else {
-      console.log("autocompl, undefined");
+      // console.log("autocompl, undefined");
     }
   },
   
