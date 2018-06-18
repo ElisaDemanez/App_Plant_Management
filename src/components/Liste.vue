@@ -30,9 +30,9 @@
                 <v-list-tile-sub-title v-html="plant.seller"></v-list-tile-sub-title>
               </v-list-tile-content>
               <v-list-tile-action>
-                <router-link :to="{ name: 'Modifier', params: { id: plant.id }}"> 
-                   <v-icon color="teal">update</v-icon>
-                </router-link>
+                <!-- <router-link :to="{ name: 'Modifier', params: { id: plant.id }}">  -->
+                   <v-icon  @click="updatePlant(plant.id)" color="teal">update</v-icon>
+                <!-- </router-link> -->
             
               <v-icon  @click="deletePlant(plant.id)" color="deep-orange darken-2">delete</v-icon>
               
@@ -46,7 +46,8 @@
 </template>
 
 <script>
-/* eslint-disable */ 
+/* eslint-disable */
+
 import { connection, plants, sellers } from "@/components/firebase.js";
 
 export default {
@@ -72,8 +73,8 @@ export default {
       // get plants
       var plantsArray = [];
       var self = this;
-
       var plantsObject = self.plantsRef;
+
       var lastItemKey = Object.keys(plantsObject)[
         Object.keys(plantsObject).length - 1
       ];
@@ -100,22 +101,29 @@ export default {
   },
   methods: {
     deletePlant: function(id) {
+      // // Known bug : unexplained : On computer, with mobiel display : confirm is not fired and always fake
       var oui = confirm(
         "Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk "
       );
       if (oui) {
+        console.log("bonjour");
         this.$firebaseRefs.plantsRef.child(id).remove();
       }
     },
-    // updatePlant: function(id) {
-    //   console.log("item", this.plantsRef[id]);
+    updatePlant: function(id) {
+      this.$router.push({
+        name: "Ajouter",
+        params: { id: id, plantToUpdate: this.plantsRef[id] }
+      });
+      // console.log("item", this.plantsRef[id]);
       // console.log(this.$firebaseRefs.plantsRef.child(id));
 
+      // // vuefire doc
       //     const copy = {...item}
       //  // remove the .key attribute
       //  delete copy['.key']
       //  this.$firebaseRefs.items.child(item['.key']).set(copy)
-    // }
+    }
   }
 };
 </script>
