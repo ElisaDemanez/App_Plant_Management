@@ -9,15 +9,16 @@
             <li v-for='error in errors' :key="error.id">{{ error }}</li>
         </ul>
        </p>
-   
+   <p v-if="existingID"> Modifier la plante n° {{existingID}}</p>
         <AutocompleteDropdown
         customId="AutocompleteSeller"
         v-model="selectedSeller"
+        :prefilledValue="sellerIDToUpdate"
+        :prefilledText="sellerNameToUpdate"
         :UnfilteredData="sellers"/>
         <br>
      
       <v-text-field id='name'  v-model='name' label = 'Subspecies name ' />
-      <!-- <p>{{db[0].count}}</p> -->
       <input type='submit' value='Submit'  >
     </form>
   </div>
@@ -41,24 +42,45 @@ export default {
       name: "",
       selectedSeller: null,
       aiID: "",
+      sellerIDToUpdate: null,
+      sellerNameToUpdate: null,
+      existingID: null
     };
+  },
+  props: {
+    id: String
   },
   firebase: {
     db: connection.ref(),
     plantsRef: plants,
     sellersRef: sellers
   },
+  created() {
+    // if it's an update
+    var params = this.$route.params;
+    var plant = params.plantToUpdate;
+
+    if (typeof plant !== "undefined") {
+      this.existingID = plant.id;
+      this.name = plant.name;
+      this.sellerNameToUpdate = plant.sellerName;
+      this.sellerIDToUpdate = plant.seller;
+
+      // FOR NOW RECREAT ONE AT WITH A NEW ID
+    } else {
+      // console.log("undefined");
+    }
+  },
   computed: {
     sellers: function() {
-       var temp = [];
-      console.log(this.sellersRef);
+      var temp = [];
       // db doest seems to work in mounted
       this.sellersRef.forEach(function(childSnapshot) {
         var childKey = childSnapshot[".key"];
         var childData = childSnapshot.name;
         temp.push([childKey, childData]);
       });
-      return temp
+      return temp;
     }
   },
   methods: {
@@ -68,7 +90,6 @@ export default {
       else if (!this.checkSeller())
         this.errors.push("Please select a seller in the list");
       else {
-        this.increaseID();
         this.setPlant();
         this.name = "";
         // alert('youdid it')
@@ -96,12 +117,17 @@ export default {
       //  this.$firebaseRefs.plantsRef.push({
       // name: this.item
       // })
-
-      connection.ref("plants/" + this.aiID).set(
+      if (this.existingID !== "undefined") {
+        var id = this.existingID;
+      } else {
+        this.increaseID();
+        var id = this.aiID;
+      }
+      connection.ref("plants/" + id).set(
         {
           name: this.name,
           seller: this.selectedSeller,
-          id: this.aiID
+          id: id
         },
         function(error) {
           if (error) {

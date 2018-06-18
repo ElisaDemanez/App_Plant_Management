@@ -27,7 +27,7 @@
            <v-list-tile  :key="plant.id" avatar ripple @click="{}">
               <v-list-tile-content :key="index">
                 <v-list-tile-title v-html="'#'+plant.id +': '+ plant.name"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="plant.seller"></v-list-tile-sub-title>
+                <v-list-tile-sub-title v-html="plant.sellerName"></v-list-tile-sub-title>
               </v-list-tile-content>
               <v-list-tile-action>
                 <!-- <router-link :to="{ name: 'Modifier', params: { id: plant.id }}">  -->
@@ -66,6 +66,14 @@ export default {
       cancelCallback: function() {},
       // this is called once the data has been retrieved from firebase
       readyCallback: function() {}
+    },
+    sellersRefObj: {
+      source: connection.ref("sellers"),
+      asObject: true,
+      // optionally provide the cancelCallback
+      cancelCallback: function() {},
+      // this is called once the data has been retrieved from firebase
+      readyCallback: function() {}
     }
   },
   computed: {
@@ -87,12 +95,12 @@ export default {
         // replace the seller id
         self.sellersRef.forEach(seller => {
           if (plantObj.seller == seller[".key"]) {
-            plantObj["seller"] = seller.name;
+            plantObj["sellerName"] = seller.name;
             return;
           }
         });
-        if (!plantObj["seller"]) {
-          plantObj["seller"] = "seller error";
+        if (!plantObj["sellerName"]) {
+          plantObj["sellerName"] = "seller error";
         }
         plantsArray.push(plantObj);
       }
@@ -106,14 +114,18 @@ export default {
         "Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk "
       );
       if (oui) {
-        console.log("bonjour");
         this.$firebaseRefs.plantsRef.child(id).remove();
       }
     },
     updatePlant: function(id) {
+      console.log("ici ", this.plantsRef[id], this.plantsRef[id].seller);
+      // this.sellersRefObj[this.plantsRef[id].seller]
       this.$router.push({
         name: "Ajouter",
-        params: { id: id, plantToUpdate: this.plantsRef[id] }
+        params: {
+          id: id,
+          plantToUpdate: this.plantsRef[id]
+        }
       });
       // console.log("item", this.plantsRef[id]);
       // console.log(this.$firebaseRefs.plantsRef.child(id));

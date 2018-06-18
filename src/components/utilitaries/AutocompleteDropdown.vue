@@ -50,10 +50,24 @@ export default {
     };
   },
   props: {
-    UnfilteredData : Array, 
-    customId : String 
+    UnfilteredData: Array,
+    customId: String,
+    prefilledValue: String, 
+    prefilledText : String,
   },
-
+  created() {
+    // if it's an update
+    if (typeof this.prefilledValue !== "undefined") {
+      console.log('bjr',this.prefilledValue, this.prefilledText);
+      this.searchText = this.prefilledText;
+      this.$emit("input", this.prefilledValue);  
+     
+ 
+    } else {
+      console.log("autocompl, undefined");
+    }
+  },
+  
   methods: {
     suggestionSelected(suggestion) {
       this.open = false;
@@ -88,7 +102,6 @@ export default {
 
 
 <style scoped >
-
 /* .dropdown {
   display: inline-block;
   position: relative;
@@ -110,7 +123,7 @@ export default {
 }
 
 li {
-  display:block;
+  display: block;
 }
 .dropdown.open .suggestion-list {
   display: block;
