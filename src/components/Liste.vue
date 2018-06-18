@@ -52,9 +52,8 @@ export default {
     };
   },
   firebase: {
-    // plantsRefef: plants,
-    sellersRef: sellers,
-    // db: connection.ref(),
+
+    sellersRef: sellers,  
     plantsRef: {
       source: connection.ref("plants"),
       // optionally bind as an object
