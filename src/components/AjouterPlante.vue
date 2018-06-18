@@ -25,7 +25,7 @@
 
 <script>
 /* eslint-disable */
-import { connection } from "@/components/firebase.js";
+import { connection, plants, sellers  } from "@/components/firebase.js";
 import AutocompleteDropdown from "@/components/utilitaries/AutocompleteDropdown.vue";
 
 export default {
@@ -45,18 +45,19 @@ export default {
     };
   },
   firebase: {
-    db: connection.ref()
+    db: connection.ref(),
+     plantsRef: plants,
+    sellersRef: sellers,
   },
   mounted() {
     var sellers = [];
+    console.log(this.sellersRef)
     // db doest seems to work in mounted
-    connection.ref("sellers").once("value", function(snapshot) {
-      snapshot.forEach(function(childSnapshot) {
-        var childKey = childSnapshot.key;
-        var childData = childSnapshot.val().name;
+      this.sellersRef.forEach(function(childSnapshot) {
+        var childKey = childSnapshot['.key'];
+        var childData = childSnapshot.name;
         sellers.push([childKey, childData]);
       });
-    });
     this.sellers = sellers;
   },
   methods: {
@@ -90,10 +91,16 @@ export default {
       return isInArray ? true : false;
     },
     setPlant: function() {
+      //  if i want an auto id
+        //  this.$firebaseRefs.plantsRef.push({
+        // name: this.item
+      // })
+      
       connection.ref("plants/" + this.aiID).set(
         {
           name: this.name,
-          seller: this.selectedSeller
+          seller: this.selectedSeller, 
+          id : this.aiID
         },
         function(error) {
           if (error) {
