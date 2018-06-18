@@ -16,3 +16,4 @@ yarn-error.log*
 
 /src/components/firebase.js
 .firebaserc
+notepad.txt
