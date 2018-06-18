@@ -18,7 +18,7 @@ export default new Router({
       component: Ajouter
     },
     {
-      path: '/ajouter/:id',
+      path: '/ajouter/:id/:plantToUpdate',
       name: 'Modifier',
       component: Ajouter
     }
