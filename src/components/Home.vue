@@ -8,6 +8,7 @@
 </template>
 
 <script>
+/* eslint-disable */ 
 import Liste from '@/components/Liste'
 
 export default {
