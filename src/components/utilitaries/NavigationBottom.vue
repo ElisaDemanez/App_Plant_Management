@@ -37,14 +37,6 @@ export default {
     
     };
   },
-  mounted() {
-  },
-  methods: {
-   
-  },
-  computed: {
-
-  }
 };
 </script>
 
