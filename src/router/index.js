@@ -16,6 +16,11 @@ export default new Router({
       path: '/ajouter',
       name: 'Ajouter',
       component: Ajouter
+    },
+    {
+      path: '/ajouter/:id',
+      name: 'Modifier',
+      component: Ajouter
     }
   ]
 })
