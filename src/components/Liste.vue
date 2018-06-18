@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { connection,plants, sellers } from "@/components/firebase.js";
+import { connection, plants, sellers } from "@/components/firebase.js";
 
 export default {
   name: "Liste",
@@ -52,52 +52,65 @@ export default {
     };
   },
   firebase: {
-    plantsRef: plants,
+    // plantsRefef: plants,
     sellersRef: sellers,
-    db : connection,
+    // db: connection.ref(),
+    plantsRef: {
+      source: connection.ref("plants"),
+      // optionally bind as an object
+      asObject: true,
+      // optionally provide the cancelCallback
+      cancelCallback: function() {},
+      // this is called once the data has been retrieved from firebase
+      readyCallback: function() {}
+    }
   },
   computed: {
     plants: function() {
-
-      var plants = [];
+      // get plants
+      var plantsArray = [];
       var self = this;
-      // get plants 
-      this.plantsRef.forEach(function(childSnapshot) {
-        var plant = {};
-        var id = childSnapshot[".key"];
-        var name = childSnapshot.name;
-        plant["id"] = id;
-        plant["name"] = name;
-        
+
+      var plantsObject = self.plantsRef;
+      var lastItemKey = Object.keys(plantsObject)[Object.keys(plantsObject).length - 1]
+      // apparently delete is bad. sorry.
+      delete plantsObject[lastItemKey];
+      
+      for (const child in plantsObject) {
+        const plantObj = plantsObject[child];
+
         // replace the seller id
-        self.sellersRef.forEach(element => {
-          if (childSnapshot.seller == element[".key"]) {
-            plant["seller"] = element.name;
+        self.sellersRef.forEach(seller => {
+          if (plantObj.seller == seller[".key"]) {
+            plantObj["seller"] = seller.name;
             return;
           }
-         
         });
-         if(!plant['seller']) {
-            plant["seller"] = "seller error";
-            
-          }
-        plants.push(plant);
-      });
+         if(!plantObj['seller']) {
+            plantObj["seller"] = "seller error";
 
-      this.loading = false;
-      return plants;
+          }
+        plantsArray.push(plantObj);
+      }
+      return plantsArray;
     }
   },
   methods: {
     deletePlant: function(id) {
-       var oui =  confirm('Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk ')
-     if(oui) { 
-             this.$firebaseRefs.plantsRef.child(id).remove()
-     }
+      var oui = confirm(
+        "Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk "
+      );
+      if (oui) {
+        this.$firebaseRefs.plantsRef.child(id).remove();
+      }
     },
     updatePlant: function(id) {
-      console.log(id);
-    
+      // console.log(this.$firebaseRefs.plantsRefef.child(id));
+      console.log("item", this.plantsRef[id]);
+      //     const copy = {...item}
+      //  // remove the .key attribute
+      //  delete copy['.key']
+      //  this.$firebaseRefs.items.child(item['.key']).set(copy)
     }
   }
 };
