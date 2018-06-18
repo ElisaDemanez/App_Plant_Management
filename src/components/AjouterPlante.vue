@@ -25,7 +25,7 @@
 
 <script>
 /* eslint-disable */
-import { connection, plants, sellers  } from "@/components/firebase.js";
+import { connection, plants, sellers } from "@/components/firebase.js";
 import AutocompleteDropdown from "@/components/utilitaries/AutocompleteDropdown.vue";
 
 export default {
@@ -41,24 +41,25 @@ export default {
       name: "",
       selectedSeller: null,
       aiID: "",
-      sellers: []
     };
   },
   firebase: {
     db: connection.ref(),
-     plantsRef: plants,
-    sellersRef: sellers,
+    plantsRef: plants,
+    sellersRef: sellers
   },
-  mounted() {
-    var sellers = [];
-    console.log(this.sellersRef)
-    // db doest seems to work in mounted
+  computed: {
+    sellers: function() {
+       var temp = [];
+      console.log(this.sellersRef);
+      // db doest seems to work in mounted
       this.sellersRef.forEach(function(childSnapshot) {
-        var childKey = childSnapshot['.key'];
+        var childKey = childSnapshot[".key"];
         var childData = childSnapshot.name;
-        sellers.push([childKey, childData]);
+        temp.push([childKey, childData]);
       });
-    this.sellers = sellers;
+      return temp
+    }
   },
   methods: {
     formValidation: function(e) {
@@ -71,7 +72,7 @@ export default {
         this.setPlant();
         this.name = "";
         // alert('youdid it')
-        this.$router.push('/')
+        this.$router.push("/");
         // .database().ref().child('posts').push().key;
       }
     },
@@ -92,15 +93,15 @@ export default {
     },
     setPlant: function() {
       //  if i want an auto id
-        //  this.$firebaseRefs.plantsRef.push({
-        // name: this.item
+      //  this.$firebaseRefs.plantsRef.push({
+      // name: this.item
       // })
-      
+
       connection.ref("plants/" + this.aiID).set(
         {
           name: this.name,
-          seller: this.selectedSeller, 
-          id : this.aiID
+          seller: this.selectedSeller,
+          id: this.aiID
         },
         function(error) {
           if (error) {
