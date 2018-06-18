@@ -117,9 +117,13 @@ export default {
       //  this.$firebaseRefs.plantsRef.push({
       // name: this.item
       // })
-      if (this.existingID !== "undefined") {
+      console.log(this.existingID)
+      if (!this.existingID == "undefined") {
+        console.log("update")
         var id = this.existingID;
       } else {
+        console.log("create")
+        
         this.increaseID();
         var id = this.aiID;
       }
