@@ -10,7 +10,8 @@ Since I mainly have succulents, later on I'd like to be able to sort them by fro
 
 After you've cloned it, you need your own firebase database in order to try it. 
 in /src/components/ replace firebase.template.js by firebase.js and fill your infos. 
-Then npm install and npm run dev
+Then ``` npm install``` , ``` npm run dev``` 
+and go to http://localhost:3001/#/
 ## Build Setup
 
 ``` bash
