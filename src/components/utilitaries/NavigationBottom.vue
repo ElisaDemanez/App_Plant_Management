@@ -5,7 +5,7 @@
  <v-card height="150px" flat>
 
 
-    <v-bottom-nav :value="true" :active.sync="e1" absolute color="transparent"  id='navbar' class="hidden-sm-and-up" >
+    <v-bottom-nav :value="true" absolute color="transparent"  id='navbar' class="hidden-sm-and-up" >
       <v-btn flat color="teal" value="Home" :to="{name:'Home'}">
         <span>Home</span>
         <v-icon>home</v-icon>
@@ -27,10 +27,6 @@
 
 export default {
   name: "NavigationBottom",
-  
-  components: {
-        
-    },
 
   data() {
     return {
