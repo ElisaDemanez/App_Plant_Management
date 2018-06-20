@@ -1,23 +1,10 @@
 <template>
   <div class="liste">
-      <!-- <ul class="list">
-     
-       <v-list two-line>
-          <template v-for="(plant, index) in plantList">
+    
 
-
-            <v-subheader v-if="plant.header" :key="plant.header">{{ plant.header }}</v-subheader>
-            <v-divider v-else-if="plant.divider" :inset="plant.inset" :key="index"></v-divider>
-            <v-list-tile v-else :key="plant.id" avatar >
-          
-              <v-list-tile-content>
-                <v-list-tile-title v-html="'#'+plant.id +': '+ plant.name"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="plant.seller"></v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </template>
-        </v-list>
-    </ul> -->
+            <!-- <v-subheader v-if="plant.header" :key="plant.header">{{ plant.header }}</v-subheader>
+            <v-divider v-else-if="plant.divider" :inset="plant.inset" :key="index"></v-divider> -->
+            <!-- <v-list-tile v-else :key="plant.id" avatar > -->
 
         <v-card >
      
@@ -30,9 +17,8 @@
                 <v-list-tile-sub-title v-html="plant.sellerName"></v-list-tile-sub-title>
               </v-list-tile-content>
               <v-list-tile-action>
-                <!-- <router-link :to="{ name: 'Modifier', params: { id: plant.id }}">  -->
-                   <v-icon  @click="updatePlant(plant.id)" color="teal">update</v-icon>
-                <!-- </router-link> -->
+         
+              <v-icon  @click="updatePlant(plant.id)"   color="teal">update</v-icon>
             
               <v-icon  @click="deletePlant(plant.id)" color="deep-orange darken-2">delete</v-icon>
               
@@ -40,6 +26,7 @@
            </v-list-tile>
             <v-divider :key="index" inset ></v-divider>
           </template>
+            <v-pagination :length="totalPages" v-model="activePage"></v-pagination>
         </v-list>
   </v-card>
   </div>
@@ -54,7 +41,11 @@ export default {
   name: "Liste",
   data() {
     return {
-      loading: true
+      loading: true,
+      plantsObject: {},
+      totalPages: null,
+      activePage: 1,
+      plantsPerPage: 6
     };
   },
   firebase: {
@@ -76,33 +67,48 @@ export default {
       readyCallback: function() {}
     }
   },
+  created: function() {
+    this.plantsObject = this.plantsRef;
+
+    // delete last object that is the name of the table
+    var lastItemKey = Object.keys(this.plantsObject)[
+      Object.keys(this.plantsObject).length - 1
+    ];
+    // apparently delete is bad. sorry.
+    delete this.plantsObject[lastItemKey];
+  },
   computed: {
     plants: function() {
-      // get plants
       var plantsArray = [];
       var self = this;
-      var plantsObject = self.plantsRef;
 
-      var lastItemKey = Object.keys(plantsObject)[
-        Object.keys(plantsObject).length - 1
-      ];
-      // apparently delete is bad. sorry.
-      delete plantsObject[lastItemKey];
+      // gets all keys
+      var keys = Object.keys(self.plantsObject).filter(function(key) {
+        return self.plantsObject[key];
+      });
+      this.totalPages = Math.ceil(keys.length / this.plantsPerPage);
 
-      for (const child in plantsObject) {
-        const plantObj = plantsObject[child];
+      const lastPlant = this.activePage * this.plantsPerPage;
+      const firstPlant = lastPlant - this.plantsPerPage;
 
-        // replace the seller id
-        self.sellersRef.forEach(seller => {
-          if (plantObj.seller == seller[".key"]) {
-            plantObj["sellerName"] = seller.name;
-            return;
+      for (let index = firstPlant; index < lastPlant; index++) {
+        const element = keys[index];
+        const plantObj = self.plantsObject[element];
+     
+        // else for the last page, it bugs
+        if (typeof plantObj !== "undefined") {
+          // // replace the seller id
+          self.sellersRef.forEach(seller => {
+            if (plantObj.seller == seller[".key"]) {
+              plantObj["sellerName"] = seller.name;
+              return;
+            }
+          });
+          if (!plantObj["sellerName"]) {
+            plantObj["sellerName"] = "seller error";
           }
-        });
-        if (!plantObj["sellerName"]) {
-          plantObj["sellerName"] = "seller error";
+          plantsArray.push(plantObj);
         }
-        plantsArray.push(plantObj);
       }
       return plantsArray;
     }
@@ -129,16 +135,11 @@ export default {
       });
       // console.log("item", this.plantsRef[id]);
       // console.log(this.$firebaseRefs.plantsRef.child(id));
-
-      // // vuefire doc
-      //     const copy = {...item}
-      //  // remove the .key attribute
-      //  delete copy['.key']
-      //  this.$firebaseRefs.items.child(item['.key']).set(copy)
     }
   }
 };
 </script>
 
 <style>
+
 </style>
