@@ -42,10 +42,10 @@ export default {
   data() {
     return {
       loading: true,
-      plantsObject: {},
+      // plantsObject: {},
       totalPages: null,
       activePage: 1,
-      plantsPerPage: 6
+      plantsPerPage: 6,
     };
   },
   firebase: {
@@ -68,23 +68,25 @@ export default {
     }
   },
   created: function() {
-    this.plantsObject = this.plantsRef;
-
-    // delete last object that is the name of the table
-    var lastItemKey = Object.keys(this.plantsObject)[
-      Object.keys(this.plantsObject).length - 1
-    ];
-    // apparently delete is bad. sorry.
-    delete this.plantsObject[lastItemKey];
+    // plantsRef is undefined at the creation, so for now a each page change im checking if it contains plants
+    // this.plantsObject = this.plantsRef;
+    // // delete last object that is the name of the table
+    // var lastItemKey = Object.keys(this.plantsObject)[
+    //   Object.keys(this.plantsObject).length - 1
+    // ];
+    // console.log(this.plantsRef[lastItemKey]);
+    // // apparently delete is bad. sorry.
+    // delete this.plantsObject[lastItemKey];
   },
   computed: {
     plants: function() {
       var plantsArray = [];
       var self = this;
+      var plantsObject = this.plantsRef;
 
       // gets all keys
-      var keys = Object.keys(self.plantsObject).filter(function(key) {
-        return self.plantsObject[key];
+      var keys = Object.keys(plantsObject).filter(function(key) {
+        return plantsObject[key];
       });
       this.totalPages = Math.ceil(keys.length / this.plantsPerPage);
 
@@ -93,10 +95,10 @@ export default {
 
       for (let index = firstPlant; index < lastPlant; index++) {
         const element = keys[index];
-        const plantObj = self.plantsObject[element];
-     
+        var plantObj = plantsObject[element];
+
         // else for the last page, it bugs
-        if (typeof plantObj !== "undefined") {
+        if (typeof plantObj !== "undefined" && element !== ".key") {
           // // replace the seller id
           self.sellersRef.forEach(seller => {
             if (plantObj.seller == seller[".key"]) {
@@ -124,8 +126,6 @@ export default {
       }
     },
     updatePlant: function(id) {
-      console.log("ici ", this.plantsRef[id], this.plantsRef[id].seller);
-      // this.sellersRefObj[this.plantsRef[id].seller]
       this.$router.push({
         name: "Ajouter",
         params: {
@@ -141,5 +141,4 @@ export default {
 </script>
 
 <style>
-
 </style>
