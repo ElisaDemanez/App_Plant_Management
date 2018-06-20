@@ -118,7 +118,7 @@ export default {
       // name: this.item
       // })
       console.log(this.existingID)
-      if (!this.existingID == "undefined") {
+      if ( typeof this.existingID != "undefined") {
         console.log("update")
         var id = this.existingID;
       } else {
