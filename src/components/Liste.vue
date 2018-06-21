@@ -88,7 +88,9 @@ export default {
       var keys = Object.keys(plantsObject).filter(function(key) {
         return plantsObject[key];
       });
-      this.totalPages = Math.ceil(keys.length / this.plantsPerPage);
+      // -1 because there's one i don't display at the end
+      this.totalPages = Math.ceil((keys.length -1) / this.plantsPerPage);
+    
 
       const lastPlant = this.activePage * this.plantsPerPage;
       const firstPlant = lastPlant - this.plantsPerPage;
