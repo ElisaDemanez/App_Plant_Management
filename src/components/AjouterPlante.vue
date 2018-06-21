@@ -117,16 +117,21 @@ export default {
       //  this.$firebaseRefs.plantsRef.push({
       // name: this.item
       // })
-      console.log(this.existingID)
-      if ( typeof this.existingID != "undefined") {
-        console.log("update")
-        var id = this.existingID;
-      } else {
-        console.log("create")
-        
+      console.log(
+        typeof this.existingID,
+        this.existingID,
+        this.existingID == null
+      );
+
+      if (this.existingID == null) {
+        console.log("create");
         this.increaseID();
         var id = this.aiID;
+      } else if (typeof this.existingID == "number") {
+        console.log("update");
+        var id = this.existingID;
       }
+
       connection.ref("plants/" + id).set(
         {
           name: this.name,
