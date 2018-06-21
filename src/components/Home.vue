@@ -1,26 +1,25 @@
 <template>
   <div class="hello">
-    <p>{{ msg }}</p>
-    <!-- <p> Ajouter une plante : <router-link to='/ajouter'>x</router-link></p> -->
+    
     <Liste/>
 
   </div>
 </template>
 
 <script>
-/* eslint-disable */ 
-import Liste from '@/components/Liste'
+/* eslint-disable */
+
+import Liste from "@/components/Liste";
 
 export default {
   components: {
     Liste: Liste
   },
-  data () {
+  data() {
     return {
-      msg: ''
-    }
+    };
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
