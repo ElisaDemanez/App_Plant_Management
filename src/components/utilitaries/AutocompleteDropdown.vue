@@ -3,17 +3,18 @@
     <div>
       
  <!--alll credits to https://designhammer.com/blog/reusable-vuejs-components-part-3-autocomplete-dropdown  -->
-  <div class="dropdown" :class="{'open' : open}" >
+  <div class="dropdown" :class="{'open' : open }" >
     <v-layout row wrap>
       <v-flex xs10>
         <v-text-field 
-   
-          v-bind:id="customId"
-          label="Seller"
+         ref="search"
+         autocomplete="off"
+          v-bind:id="'autocomplete'+customId"
+          v-bind:label="customId"
         v-model="searchText"
         @input="searchChanged"
         @keydown.esc="setOpen(false)"
-        @blur="setOpen(false)"
+         @blur="setOpen(false)"
           />
       </v-flex>
       <v-flex xs2>
@@ -25,13 +26,20 @@
     </v-container>
       </v-flex>
     </v-layout>
-    <ul class="suggestion-list">
-      <li v-for="(suggestion, index) in matches" :key="index"
-      @mousedown.prevent
-      @click="suggestionSelected(suggestion)">
-        {{ suggestion[1][1] }}
-      </li>
-    </ul>
+      <v-list  class="suggestion-list">
+          <template v-for="(suggestion, index) in matches">
+            
+           <v-list-tile  :key="index"  ripple @mousedown.prevent
+              @click="suggestionSelected(suggestion)" class ="smaller_height">
+              <v-list-tile-content :key="'x'+index">
+                <v-list-tile-title v-html="suggestion[1][1]"></v-list-tile-title>
+                 <!-- <v-list-tile-sub-title v-html="suggestion[1][1]">
+                   </v-list-tile-sub-title>  -->
+              </v-list-tile-content> 
+           </v-list-tile>
+            <v-divider :key="'y'+index" inset ></v-divider>
+          </template>
+        </v-list>
   </div>
     </div>
 </template>
@@ -52,24 +60,20 @@ export default {
   props: {
     UnfilteredData: Array,
     customId: String,
-    prefilledValue: String, 
-    prefilledText : String,
+    prefilledValue: String,
+    prefilledText: String
   },
   created() {
     // if it's an update
-    // console.log(typeof this.prefilledValue,this.prefilledValue)
     if (this.prefilledValue) {
-      console.log('created')
-      console.log('bjr',this.prefilledValue, this.prefilledText);
-      this.searchText= this.prefilledText;
-      this.$emit("input", this.prefilledValue);  
-     
- 
+      console.log("created");
+      console.log("bjr", this.prefilledValue, this.prefilledText);
+      this.searchText = this.prefilledText;
+      this.$emit("input", this.prefilledValue);
     } else {
-      // console.log("autocompl, undefined");
     }
   },
-  
+
   methods: {
     suggestionSelected(suggestion) {
       this.open = false;
@@ -79,9 +83,12 @@ export default {
       this.$emit("input", suggestion[1][0]);
     },
     setOpen(isOpen) {
+      console.log('bonjou')
       this.open = isOpen;
       //if you re-open it , it shows you everything
       if (this.open) {
+        console.log(this.$refs)
+        this.$refs.search.focus()
         this.searchText = "";
       }
     },
@@ -104,10 +111,14 @@ export default {
 
 
 <style scoped >
-/* .dropdown {
+.smaller_height {
+  height: 38px !important ;
+}
+
+.dropdown {
   display: inline-block;
   position: relative;
-} */
+}
 
 .suggestion-list {
   background-color: rgba(255, 255, 255, 0.95);
@@ -119,14 +130,11 @@ export default {
   width: 100%;
   overflow: hidden;
   position: absolute;
-  top: 20px;
+  top: 50px;
   left: 0;
   z-index: 2;
 }
 
-li {
-  display: block;
-}
 .dropdown.open .suggestion-list {
   display: block;
 }
@@ -149,10 +157,5 @@ li {
 
 .suggestion-list li {
   cursor: pointer;
-}
-
-.suggestion-list li:hover {
-  color: #fff;
-  background-color: #ccc;
 }
 </style>
