@@ -32,8 +32,8 @@
            <v-list-tile  :key="index"  ripple @mousedown.prevent
               @click="suggestionSelected(suggestion)" class ="smaller_height">
               <v-list-tile-content :key="'x'+index">
-                <v-list-tile-title v-html="suggestion[1][1]"></v-list-tile-title>
-                 <!-- <v-list-tile-sub-title v-html="suggestion[1][1]">
+                <v-list-tile-title v-html="suggestion[1].name"></v-list-tile-title>
+                 <!-- <v-list-tile-sub-title v-html="suggestion[1].name">
                    </v-list-tile-sub-title>  -->
               </v-list-tile-content> 
            </v-list-tile>
@@ -58,7 +58,7 @@ export default {
     };
   },
   props: {
-    UnfilteredData: Array,
+    UnfilteredData: Object,
     customId: String,
     prefilledValue: String,
     prefilledText: String
@@ -66,8 +66,7 @@ export default {
   created() {
     // if it's an update
     if (this.prefilledValue) {
-      console.log("created");
-      console.log("bjr", this.prefilledValue, this.prefilledText);
+    
       this.searchText = this.prefilledText;
       this.$emit("input", this.prefilledValue);
     } else {
@@ -75,20 +74,19 @@ export default {
   },
 
   methods: {
-    suggestionSelected(suggestion) {
+    suggestionSelected(suggestion ) {
       this.open = false;
-      // Don't remember why the [1][1], but that's the name
-      this.searchText = suggestion[1][1];
-      // magically changes the value to the id ([1][0])
-      this.$emit("input", suggestion[1][0]);
+      // Don't remember why the .name, but that's the name
+      this.searchText = suggestion[1].name;
+      // magically changes the value to the id ([0])
+      this.$emit("input", suggestion[0]);
     },
     setOpen(isOpen) {
-      console.log('bonjou')
       this.open = isOpen;
       //if you re-open it , it shows you everything
       if (this.open) {
-        console.log(this.$refs)
-        this.$refs.search.focus()
+        console.log(this.$refs);
+        this.$refs.search.focus();
         this.searchText = "";
       }
     },
@@ -101,8 +99,10 @@ export default {
   computed: {
     matches() {
       return Object.entries(this.UnfilteredData).filter(option => {
-        var optionText = option[1][1].toUpperCase();
-        return optionText.match(this.searchText.toUpperCase());
+        if (typeof option[1] !== "string") {
+          var optionText = option[1].name.toUpperCase();
+          return optionText.match(this.searchText.toUpperCase());
+        }
       });
     }
   }
