@@ -2,7 +2,7 @@
 <v-app id="app">
  
 <NavigationTop />
-  <v-container d-flex  color="purple">
+  <v-container class ="body-container" d-flex  color="purple">
       <v-layout row wrap>
         <v-flex xs12 sm8 md6 lg6 xl4 offset-sm2 offset-md3 offset-lg3 offset-sm5 >
           <router-view/>
@@ -36,5 +36,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+@media (max-width: 960px) {
+   .body-container {
+     padding-bottom: 13vh !important;
+  } 
 }
 </style>
