@@ -66,10 +66,7 @@ export default {
       this.sellerNameToUpdate = plant.sellerName;
       this.sellerIDToUpdate = plant.seller;
 
-      // FOR NOW RECREAT ONE AT WITH A NEW ID
-    } else {
-      // console.log("undefined");
-    }
+    } 
   },
   computed: {
     sellers: function() {
@@ -92,7 +89,6 @@ export default {
       else {
         this.setPlant();
         this.name = "";
-        // alert('youdid it')
         this.$router.push("/");
         // .database().ref().child('posts').push().key;
       }
@@ -117,18 +113,13 @@ export default {
       //  this.$firebaseRefs.plantsRef.push({
       // name: this.item
       // })
-      console.log(
-        typeof this.existingID,
-        this.existingID,
-        this.existingID == null
-      );
-
+     
       if (this.existingID == null) {
-        console.log("create");
+        // console.log("create");
         this.increaseID();
         var id = this.aiID;
       } else if (typeof this.existingID == "number") {
-        console.log("update");
+        // console.log("update");
         var id = this.existingID;
       }
 
