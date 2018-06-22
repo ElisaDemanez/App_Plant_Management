@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import Ajouter from '@/components/AddPlant'
-import AddObject from '@/components/AddObject'
+import AjouterObjet from '@/components/AddObject'
 
 Vue.use(Router)
 
@@ -16,7 +16,8 @@ export default new Router({
     {
       path: '/ajouter',
       name: 'Ajouter',
-      component: Ajouter
+      component: Ajouter,
+      
     },
     {
       path: '/ajouter/:id/:plantToUpdate',
@@ -24,9 +25,17 @@ export default new Router({
       component: Ajouter
     },
     {
-      path: '/ajouter/Misc/:object',
+      path: '/ajoutermisc/:object',
       name: 'AjouterMisc',
-      component: AddObject
+      component: AjouterObjet
     } 
   ]
 })
+
+// children: [
+//   {
+//     // UserProfile will be rendered inside User's <router-view>
+//     // when /user/:id/profile is matched
+//     path: 'profile',
+//     component: UserProfile
+//   },
