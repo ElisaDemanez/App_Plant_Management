@@ -1,9 +1,15 @@
+
 <template>
   <div class='ajouter'>
+      <p v-if='errors.length'>
+          <ul>
+            <li v-for='error in errors' :key="error.id">{{ error }}</li>
+        </ul>
+       </p>
     <div v-if="!authorizedObjects.includes($route.params.object)" >
         Error, "{{$route.params.object}}" not allowed 
     </div>
-    <v-form v-else id="form"  method="get" >
+    <v-form v-else id="form" method="get" >
      
       <v-text-field
        v-bind:id='$route.params.object' 
@@ -11,10 +17,10 @@
        v-bind:label="label" 
        :rules="nameRules"
       required/>
-      <!-- <input type='submit' value='Submit'  > -->
-         <v-btn 
+      <!-- <input type='submit' value='Submit' > -->
+         <v-btn
          @click='formValidation'> submit
-        </v-btn  >
+        </v-btn>
     </v-form>
 
   </div>
@@ -22,8 +28,9 @@
 
 <script>
 /* eslint-disable */
-import { connection } from "@/components/firebase.js";
+// this is a component to add anything with a name entry only
 // Change authorizedObjects to allow another url parameter
+import { connection } from "@/components/firebase.js";
 export default {
   name: "AjouterObjet",
 
@@ -34,7 +41,9 @@ export default {
       nameRules: [
         v => !!v || "Is required",
         v => (v && v.length <= 45) || "Must be less than 45 characters"
-      ]
+      ],
+      errors: [],
+
     };
   },
   props: {
@@ -68,7 +77,10 @@ export default {
           }
         }
       }
-      if (alreadyIn) return;
+      if (alreadyIn) {
+          this.errors.push("Already in the database !")
+          return;
+      }
       else {
         connection.ref(this.$route.params.object).push({
           name: this.name
