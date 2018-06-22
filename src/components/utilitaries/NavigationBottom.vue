@@ -1,11 +1,9 @@
 
 <template>
 
+ <v-card  flat>
 
- <v-card height="150px" flat>
-
-
-    <v-bottom-nav :value="true" absolute color="transparent"  id='navbar' class="hidden-sm-and-up" >
+    <v-bottom-nav :value="true" absolute color="white"  id='navbar' class="hidden-sm-and-up" >
       <v-btn flat color="teal" value="Home" :to="{name:'Home'}">
         <span>Home</span>
         <v-icon>home</v-icon>
@@ -14,9 +12,16 @@
         <span>Add a plant</span>
         <v-icon>add</v-icon>
       </v-btn>
-  
-    </v-bottom-nav>
+   <v-menu offset-y>
+      <v-btn flat slot="activator" color="teal" >Miscellaneous        <v-icon>accessible_forward</v-icon></v-btn>
 
+      <v-list >
+        <v-list-tile   v-for="(item, index) in miscellaneous" :key="index" :to="{name: 'AjouterMisc', params : { object : item.param} }">
+          <v-list-tile-title class="teal--text" >{{ item.title }}</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
+    </v-bottom-nav>
  
   </v-card>
 
@@ -30,18 +35,20 @@ export default {
 
   data() {
     return {
-    
+      miscellaneous: [
+        { title: "Ajouter un vendeur", route: "addSeller", param: "sellers" },
+        { title: "Ajouter une espèce", route: "addSpecie", param: "species" }
+      ]
     };
-  },
+  }
 };
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped >
 #navbar {
-
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 </style>
