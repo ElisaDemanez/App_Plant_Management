@@ -53,10 +53,6 @@ export default {
     plantsRef: {
       source: connection.ref("plants"),
       asObject: true,
-      // optionally provide the cancelCallback
-      cancelCallback: function() {},
-      // this is called once the data has been retrieved from firebase
-      readyCallback: function() {}
     },
     sellersRefObj: {
       source: connection.ref("sellers"),
