@@ -60,13 +60,12 @@ export default {
   props: {
     UnfilteredData: Object,
     customId: String,
-    prefilledValue: String,
+    prefilledValue: String || Number,
     prefilledText: String
   },
   created() {
     // if it's an update
     if (this.prefilledValue) {
-    
       this.searchText = this.prefilledText;
       this.$emit("input", this.prefilledValue);
     } else {
@@ -74,7 +73,7 @@ export default {
   },
 
   methods: {
-    suggestionSelected(suggestion ) {
+    suggestionSelected(suggestion) {
       this.open = false;
       // Don't remember why the .name, but that's the name
       this.searchText = suggestion[1].name;
