@@ -13,7 +13,7 @@
               <v-list-tile-content :key="index">
                 <v-list-tile-title>
                   #{{plant.id}}:   
-                  <strong v-if="plant.speciesName"  v-html="plant.speciesName">
+                  <strong v-if="plant.speciesName"  v-html="plant.speciesName.slice(0, 4) + '.'">
                   </strong> 
                   {{plant.subspName}} 
                 </v-list-tile-title>
@@ -42,7 +42,7 @@
             <v-pagination :length="totalPages" v-model="activePage"></v-pagination>
         </v-list>
   </v-card>
-    <v-btn @click="$forceUpdate()">Force update once</v-btn>
+    <v-btn @click="$forceUpdate()">Click me</v-btn>
   
   </div>
 
@@ -113,8 +113,7 @@ export default {
 
           // else for the last page, it bugs
           if (typeof plantObj !== "undefined" && element !== ".key") {
-            plantObj["speciesName"] =
-              this.speciesRef[plantObj.species].name.slice(0, 4) + ".";
+            plantObj["speciesName"] = this.speciesRef[plantObj.species].name;
             plantObj["sellerName"] = this.sellersRef[plantObj.seller].name;
             var subsp = this.speciesRef[plantObj.species][plantObj.subsp];
             plantObj["subspName"] = subsp.name;

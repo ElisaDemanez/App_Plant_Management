@@ -18,7 +18,7 @@
        :rules="nameRules"
       required/>
       <!-- <input type='submit' value='Submit' > -->
-         <v-btn
+         <v-btn color='primary'
          @click='formValidation'> submit
         </v-btn>
         <v-btn flat value="Home" :to="{name:'Home'}" >cancel</v-btn>

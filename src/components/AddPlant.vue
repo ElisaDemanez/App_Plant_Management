@@ -33,7 +33,7 @@
         :prefilledText="subspeciesNameToUpdate" 
         :UnfilteredData="subspeciesRef"/>
         <br>
-      <v-text-field id='name'  v-model='name' label = 'Subspecies name ' />
+      <v-text-field id='description'  v-model='description' label = 'Additional infos' />
       <v-container>
       <v-btn color='primary' type='submit' value='Submit'>Submit </v-btn>
       <v-spacer></v-spacer>
@@ -59,7 +59,10 @@ export default {
     return {
       errors: [],
       aiID: "",
-      name: "",
+      description: "",
+      descriptionRules: [
+        v => (v && v.length <= 150) || "Must be less than 150 characters"
+      ],
       selectedSeller: null,
       selectedSpecies: null,
       selectedSubspecies: null,
@@ -92,7 +95,7 @@ export default {
     if (typeof params.plantToUpdate !== "undefined") {
       var plant = params.plantToUpdate;
       this.existingID = plant.id;
-      this.name = plant.name;
+      this.description = plant.description;
       this.sellerNameToUpdate = plant.sellerName;
       this.sellerIDToUpdate = plant.seller;
       this.speciesNameToUpdate = plant.speciesName;
@@ -113,7 +116,6 @@ export default {
   methods: {
     formValidation: function(e) {
       this.errors = [];
-      if (!this.name) this.errors.push("Name empty.");
 
       if (!this.checkAutocomplete("autocompleteSeller", this.sellersRef))
         this.errors.push("Please select a seller in the list");
@@ -125,7 +127,7 @@ export default {
         this.errors.push("Please select a species in the list");
       else if (!this.errors.length) {
         this.setPlant();
-        this.name = "";
+
         this.$router.push("/");
         // .database().ref().child('posts').push().key;
       }
@@ -136,6 +138,7 @@ export default {
     },
     checkAutocomplete: function(elementID, firebaseRef) {
       var item = document.getElementById(elementID).value;
+      console.log(item);
       var isInArray = false;
 
       for (const key in firebaseRef) {
@@ -161,7 +164,7 @@ export default {
           seller: this.selectedSeller,
           species: this.selectedSpecies,
           subsp: this.selectedSubspecies,
-          name: this.name,
+          description: this.description ? this.description : null,
           id: id
         },
         function(error) {
