@@ -1,6 +1,5 @@
 <template>
   <div class="liste">
-    
 
             <!-- <v-subheader v-if="plant.header" :key="plant.header">{{ plant.header }}</v-subheader>
             <v-divider v-else-if="plant.divider" :inset="plant.inset" :key="index"></v-divider> -->
@@ -43,7 +42,10 @@
             <v-pagination :length="totalPages" v-model="activePage"></v-pagination>
         </v-list>
   </v-card>
+    <v-btn @click="$forceUpdate()">Force update once</v-btn>
+  
   </div>
+
 </template>
 
 <script>
@@ -111,10 +113,11 @@ export default {
 
           // else for the last page, it bugs
           if (typeof plantObj !== "undefined" && element !== ".key") {
-            plantObj["speciesName"] = this.speciesRef[plantObj.species].name.slice(0, 4) + ".";
+            plantObj["speciesName"] =
+              this.speciesRef[plantObj.species].name.slice(0, 4) + ".";
             plantObj["sellerName"] = this.sellersRef[plantObj.seller].name;
             var subsp = this.speciesRef[plantObj.species][plantObj.subsp];
-            plantObj["subspName"] = subsp.name ;
+            plantObj["subspName"] = subsp.name;
             plantObj["temperature"] = subsp.temperature;
             plantObj["exposure"] = subsp.exposure;
 
