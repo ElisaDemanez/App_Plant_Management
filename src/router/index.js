@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import Ajouter from '@/components/AddPlant'
 import AjouterObjet from '@/components/AddObject'
+import AddSubspecies from '@/components/AddSubspecies'
+
 
 Vue.use(Router)
 
@@ -14,20 +16,25 @@ export default new Router({
       component: Home
     },
     {
-      path: '/ajouter',
+      path: '/add',
       name: 'Ajouter',
       component: Ajouter,
       
     },
     {
-      path: '/ajouter/:id/:plantToUpdate',
+      path: '/add/:id/:plantToUpdate',
       name: 'Modifier',
       component: Ajouter
     },
     {
-      path: '/ajoutermisc/:object',
+      path: '/misc/add/:object/',
       name: 'AjouterMisc',
       component: AjouterObjet
+    },
+    {
+      path: '/subsp/add',
+      name: 'AjouterSousespèce',
+      component: AddSubspecies
     } 
   ]
 })
