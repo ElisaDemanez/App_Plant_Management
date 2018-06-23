@@ -34,7 +34,11 @@
         :UnfilteredData="subspeciesRef"/>
         <br>
       <v-text-field id='name'  v-model='name' label = 'Subspecies name ' />
-      <input type='submit' value='Submit'  >
+      <v-container>
+      <v-btn color='primary' type='submit' value='Submit'>Submit </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn flat value="Home" :to="{name:'Home'}" >cancel</v-btn>
+      </v-container>
     </form>
   </div>
 </template>
@@ -85,9 +89,8 @@ export default {
   created() {
     // if it's an update
     var params = this.$route.params;
-    var plant = params.plantToUpdate;
-
-    if (typeof plant !== "undefined") {
+    if (typeof params.plantToUpdate !== "undefined") {
+      var plant = params.plantToUpdate;
       this.existingID = plant.id;
       this.name = plant.name;
       this.sellerNameToUpdate = plant.sellerName;
@@ -100,15 +103,10 @@ export default {
   },
   computed: {
     subspeciesRef: function() {
-      console.log("tick");
       if (this.selectedSpecies)
         var temp = this.speciesRef[this.selectedSpecies];
-      else
-        var temp = this.speciesRef[
-          this.$route.params.plantToUpdate.species
-        ];
+      else var temp = this.speciesRef[this.$route.params.plantToUpdate.species];
 
-      console.log("temp", this.speciesRef, temp);
       return temp;
     }
   },
@@ -184,5 +182,8 @@ export default {
 #form {
   display: flex;
   flex-direction: column;
+}
+.btn {
+  max-width: 150px !important;
 }
 </style>

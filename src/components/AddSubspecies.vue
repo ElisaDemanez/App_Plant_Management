@@ -37,9 +37,10 @@
         
         </v-container>
 
-         <v-btn
+         <v-btn color='primary'
          @click='formValidation'> submit
         </v-btn>
+        <v-btn flat value="Home" :to="{name:'Home'}" >cancel</v-btn>
     </v-form>
 
   </div>

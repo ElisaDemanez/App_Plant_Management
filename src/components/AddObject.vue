@@ -21,6 +21,7 @@
          <v-btn
          @click='formValidation'> submit
         </v-btn>
+        <v-btn flat value="Home" :to="{name:'Home'}" >cancel</v-btn>
     </v-form>
 
   </div>
@@ -42,8 +43,7 @@ export default {
         v => !!v || "Is required",
         v => (v && v.length <= 45) || "Must be less than 45 characters"
       ],
-      errors: [],
-
+      errors: []
     };
   },
   props: {
@@ -78,10 +78,9 @@ export default {
         }
       }
       if (alreadyIn) {
-          this.errors.push("Already in the database !")
-          return;
-      }
-      else {
+        this.errors.push("Already in the database !");
+        return;
+      } else {
         connection.ref(this.$route.params.object).push({
           name: this.name
         });
