@@ -65,6 +65,8 @@ export default {
   },
   created() {
     // if it's an update
+    console.log('ici')
+      console.log(this.prefilledValue,this.prefilledText)
     if (this.prefilledValue) {
       this.searchText = this.prefilledText;
       this.$emit("input", this.prefilledValue);
@@ -79,12 +81,12 @@ export default {
       this.searchText = suggestion[1].name;
       // magically changes the value to the id ([0])
       this.$emit("input", suggestion[0]);
+      // this.$emit(this.customId+'-selected', suggestion[0])
     },
     setOpen(isOpen) {
       this.open = isOpen;
       //if you re-open it , it shows you everything
       if (this.open) {
-        console.log(this.$refs);
         this.$refs.search.focus();
         this.searchText = "";
       }
@@ -97,6 +99,7 @@ export default {
   },
   computed: {
     matches() {
+      console.log('here', this.UnfilteredData)
       return Object.entries(this.UnfilteredData).filter(option => {
         if (typeof option[1] !== "string") {
           var optionText = option[1].name.toUpperCase();

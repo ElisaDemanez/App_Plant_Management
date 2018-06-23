@@ -43,4 +43,5 @@ export default {
      padding-bottom: 13vh !important;
   } 
 }
+
 </style>
