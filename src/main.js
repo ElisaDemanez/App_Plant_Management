@@ -8,17 +8,25 @@ import 'vuetify/dist/vuetify.min.css'
 var VueFire = require('vuefire')
 var firebase = require('firebase')
 
-
-Vue.use(Vuetify)
-// explicit installation required in module environments
 Vue.use(VueFire)
+//  Vue.use(Vuetify)
+import colors from 'vuetify/es5/util/colors'
+
+Vue.use(Vuetify, {
+  theme: {
+    primary: colors.teal.base
+
+  }
+})
+// explicit installation required in module environments
+
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
-})
+    el: '#app',
+    router,
+    components: { App },
+    template: '<App/>'
+  })
