@@ -1,7 +1,7 @@
 
 <template>
   <div class='ajouter'>
-    
+    <!-- need to to the update for sp. -->
     <form id="form" @submit='formValidation' method="get" >
        <p v-if='errors.length'>
          <b>Please correct the following error(s):</b>
@@ -24,7 +24,7 @@
         :prefilledText="speciesNameToUpdate"
         :UnfilteredData="speciesRef"/>
         <br>
-        <AutocompleteDropdown v-if="selectedSpecies != null"
+        <AutocompleteDropdown v-if="selectedSpecies !== null"
         customId="Subspecies"
         v-model="selectedSubspecies"
         :prefilledValue="subspeciesIDToUpdate" 
@@ -63,7 +63,7 @@ export default {
       speciesIDToUpdate: null,
       speciesNameToUpdate: null,
       subspeciesIDToUpdate: null,
-      subspeciesNameToUpdate: null,
+      subspeciesNameToUpdate: null
     };
   },
   props: {
@@ -103,54 +103,40 @@ export default {
   },
   methods: {
     formValidation: function(e) {
-      console.log(this.selectedSpecies, typeof this.selectedSpecies);
       this.errors = [];
       if (!this.name) this.errors.push("Name empty.");
-      else {
-        if (!this.checkSeller())
-          this.errors.push("Please select a seller in the list");
-        if (!this.checkSpecies())
-          this.errors.push("Please select a species in the list");
-        else {
-          this.setPlant();
-          this.name = "";
-          this.$router.push("/");
-          // .database().ref().child('posts').push().key;
-        }
+
+      if (!this.checkAutocomplete("autocompleteSeller", this.sellersRef))
+        this.errors.push("Please select a seller in the list");
+
+      if (!this.checkAutocomplete("autocompleteSpecies", this.speciesRef))
+        this.errors.push("Please select a species in the list");
+
+      if (!this.checkAutocomplete("autocompleteSubspecies", this.subspeciesRef))
+        this.errors.push("Please select a species in the list");
+      else if (!this.errors.length) {
+        this.setPlant();
+        this.name = "";
+        this.$router.push("/");
+        // .database().ref().child('posts').push().key;
       }
     },
     increaseID: function() {
       this.aiID = parseInt(this.db[0].count) + 1;
       connection.ref("aiID").set({ count: String(this.aiID) });
     },
-    checkSeller: function() {
-      var seller = document.getElementById("autocompleteSeller").value;
+    checkAutocomplete: function(elementID, firebaseRef) {
+      console.log(elementID);
+      var item = document.getElementById(elementID).value;
       var isInArray = false;
 
-      for (const key in this.sellersRef) {
-        const element = this.sellersRef[key];
-        console.log(seller === element.name);
-        if (element.name === seller) {
+      for (const key in firebaseRef) {
+        const element = firebaseRef[key];
+        if (element.name === item) {
           isInArray = true;
         }
       }
-
-      return isInArray ? true : false;
-    },
-
-    checkSpecies: function() {
-      var seller = document.getElementById("autocompleteSpecies").value;
-      var isInArray = false;
-
-      for (const key in this.speciesRef) {
-        const element = this.speciesRef[key];
-        console.log(seller === element.name);
-        if (element.name === seller) {
-          isInArray = true;
-        }
-      }
-
-      return isInArray ? true : false;
+      return isInArray;
     },
     setPlant: function() {
       if (this.existingID == null) {
