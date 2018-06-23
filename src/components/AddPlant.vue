@@ -11,13 +11,19 @@
        </p>
    <p v-if="existingID"> Modifier la plante n° {{existingID}}</p>
         <AutocompleteDropdown
-        customId="AutocompleteSeller"
+        customId="Seller"
         v-model="selectedSeller"
         :prefilledValue="sellerIDToUpdate"
         :prefilledText="sellerNameToUpdate"
-        :UnfilteredData="sellers"/>
+        :UnfilteredData="sellersRef"/>
         <br>
-     
+     <AutocompleteDropdown
+        customId="Species"
+        v-model="selectedSpecies"
+        :prefilledValue="speciesIDToUpdate"
+        :prefilledText="speciesNameToUpdate"
+        :UnfilteredData="speciesRef"/>
+        <br>
       <v-text-field id='name'  v-model='name' label = 'Subspecies name ' />
       <input type='submit' value='Submit'  >
     </form>
@@ -39,12 +45,16 @@ export default {
   data() {
     return {
       errors: [],
+      aiID: "",
       name: "",
       selectedSeller: null,
-      aiID: "",
+      selectedSpecies: null,
+
+      existingID: null,
       sellerIDToUpdate: null,
       sellerNameToUpdate: null,
-      existingID: null
+      speciesIDToUpdate: null,
+      speciesNameToUpdate: null
     };
   },
   props: {
@@ -52,8 +62,14 @@ export default {
   },
   firebase: {
     db: connection.ref(),
-    plantsRef: plants,
-    sellersRef: sellers
+    speciesRef: {
+      source: connection.ref("species"),
+      asObject: true
+    },
+    sellersRef: {
+      source: connection.ref("sellers"),
+      asObject: true
+    }
   },
   created() {
     // if it's an update
@@ -65,32 +81,37 @@ export default {
       this.name = plant.name;
       this.sellerNameToUpdate = plant.sellerName;
       this.sellerIDToUpdate = plant.seller;
-
-    } 
+       this.speciesNameToUpdate = plant.speciesName;
+      this.speciesIDToUpdate = plant.species;
+    }
   },
   computed: {
-    sellers: function() {
-      var temp = [];
-      // db doest seems to work in mounted
-      this.sellersRef.forEach(function(childSnapshot) {
-        var childKey = childSnapshot[".key"];
-        var childData = childSnapshot.name;
-        temp.push([childKey, childData]);
-      });
-      return temp;
-    }
+    // sellers: function() {
+    //   var temp = [];
+    //   // db doest seems to work in mounted
+    //   this.sellersRef.forEach(function(childSnapshot) {
+    //     var childKey = childSnapshot[".key"];
+    //     var childData = childSnapshot.name;
+    //     temp.push([childKey, childData]);
+    //   });
+    //   return temp;
+    // }
   },
   methods: {
     formValidation: function(e) {
       this.errors = [];
       if (!this.name) this.errors.push("Name empty.");
-      else if (!this.checkSeller())
-        this.errors.push("Please select a seller in the list");
       else {
-        this.setPlant();
-        this.name = "";
-        this.$router.push("/");
-        // .database().ref().child('posts').push().key;
+        if (!this.checkSeller())
+          this.errors.push("Please select a seller in the list");
+        if (!this.checkSpecies())
+          this.errors.push("Please select a species in the list");
+        else {
+          this.setPlant();
+          this.name = "";
+          this.$router.push("/");
+          // .database().ref().child('posts').push().key;
+        }
       }
     },
     increaseID: function() {
@@ -98,28 +119,41 @@ export default {
       connection.ref("aiID").set({ count: String(this.aiID) });
     },
     checkSeller: function() {
-      var seller = document.getElementById("AutocompleteSeller").value;
+      var seller = document.getElementById("autocompleteSeller").value;
       var isInArray = false;
-      this.sellers.forEach(element => {
-        if (element[1] === seller) {
+
+      for (const key in this.sellersRef) {
+        const element = this.sellersRef[key];
+        console.log(seller === element.name);
+        if (element.name === seller) {
           isInArray = true;
-          return;
         }
-      });
+      }
+
+      return isInArray ? true : false;
+    },
+
+    checkSpecies: function() {
+      var seller = document.getElementById("autocompleteSpecies").value;
+      var isInArray = false;
+
+      for (const key in this.speciesRef) {
+        const element = this.speciesRef[key];
+        console.log(seller === element.name);
+        if (element.name === seller) {
+          isInArray = true;
+        }
+      }
+
       return isInArray ? true : false;
     },
     setPlant: function() {
-      //  if i want an auto id
-      //  this.$firebaseRefs.plantsRef.push({
-      // name: this.item
-      // })
-     
       if (this.existingID == null) {
-        // console.log("create");
+        //create
         this.increaseID();
         var id = this.aiID;
       } else if (typeof this.existingID == "number") {
-        // console.log("update");
+        //update
         var id = this.existingID;
       }
 
@@ -127,6 +161,7 @@ export default {
         {
           name: this.name,
           seller: this.selectedSeller,
+          species : this.selectedSpecies,
           id: id
         },
         function(error) {
