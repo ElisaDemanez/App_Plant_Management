@@ -7,14 +7,28 @@
             <!-- <v-list-tile v-else :key="plant.id" avatar > -->
 
         <v-card >
-     
        <v-list two-line>
           <template v-for="(plant, index) in plants">
             
            <v-list-tile  :key="plant.id" avatar ripple @click="{}">
               <v-list-tile-content :key="index">
-                <v-list-tile-title v-html="'#'+plant.id +': '+ plant.name"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="plant.sellerName"></v-list-tile-sub-title>
+                <v-list-tile-title>
+                  #{{plant.id}}:   
+                  <strong v-if="plant.speciesName"  v-html="plant.speciesName">
+                  </strong> 
+                  {{plant.subspName}} 
+                </v-list-tile-title>
+                <v-list-tile-sub-title>
+                   <v-layout row justify-space-between>
+                      <v-flex xs10>
+                        <span class="text-xs-right">{{plant.exposure}}</span>
+                      </v-flex>
+                      <v-flex xs2>
+                         <span class="text-xs-left">{{plant.temperature}}°</span>   
+                      </v-flex>
+                    </v-layout>
+                </v-list-tile-sub-title>
+               
               </v-list-tile-content>
               <v-list-tile-action>
          
@@ -35,32 +49,31 @@
 <script>
 /* eslint-disable */
 
-import { connection, plants, sellers } from "@/components/firebase.js";
+import { connection, sellers } from "@/components/firebase.js";
 
 export default {
   name: "Liste",
   data() {
     return {
       loading: true,
-      // plantsObject: {},
+
       totalPages: null,
       activePage: 1,
-      plantsPerPage: 6,
+      plantsPerPage: 6
     };
   },
   firebase: {
-    sellersRef: sellers,
     plantsRef: {
       source: connection.ref("plants"),
-      asObject: true,
+      asObject: true
     },
-    sellersRefObj: {
+    sellersRef: {
       source: connection.ref("sellers"),
-      asObject: true,
-      // optionally provide the cancelCallback
-      cancelCallback: function() {},
-      // this is called once the data has been retrieved from firebase
-      readyCallback: function() {}
+      asObject: true
+    },
+    speciesRef: {
+      source: connection.ref("species"),
+      asObject: true
     }
   },
   created: function() {
@@ -74,40 +87,39 @@ export default {
     // // apparently delete is bad. sorry.
     // delete this.plantsObject[lastItemKey];
   },
+
   computed: {
     plants: function() {
       var plantsArray = [];
       var self = this;
       var plantsObject = this.plantsRef;
 
-      // gets all keys
+      // pagination
       var keys = Object.keys(plantsObject).filter(function(key) {
         return plantsObject[key];
       });
       // -1 because there's one i don't display at the end
-      this.totalPages = Math.ceil((keys.length -1) / this.plantsPerPage);
-    
-
+      this.totalPages = Math.ceil((keys.length - 1) / this.plantsPerPage);
       const lastPlant = this.activePage * this.plantsPerPage;
       const firstPlant = lastPlant - this.plantsPerPage;
 
       for (let index = firstPlant; index < lastPlant; index++) {
         const element = keys[index];
-        var plantObj = plantsObject[element];
 
-        // else for the last page, it bugs
-        if (typeof plantObj !== "undefined" && element !== ".key") {
-          // // replace the seller id
-          self.sellersRef.forEach(seller => {
-            if (plantObj.seller == seller[".key"]) {
-              plantObj["sellerName"] = seller.name;
-              return;
-            }
-          });
-          if (!plantObj["sellerName"]) {
-            plantObj["sellerName"] = "seller error";
+        if (typeof plantsObject[element] != "string" && plantsObject[element]) {
+          var plantObj = plantsObject[element];
+
+          // else for the last page, it bugs
+          if (typeof plantObj !== "undefined" && element !== ".key") {
+            plantObj["speciesName"] = this.speciesRef[plantObj.species].name.slice(0, 4) + ".";
+            plantObj["sellerName"] = this.sellersRef[plantObj.seller].name;
+            var subsp = this.speciesRef[plantObj.species][plantObj.subsp];
+            plantObj["subspName"] = subsp.name ;
+            plantObj["temperature"] = subsp.temperature;
+            plantObj["exposure"] = subsp.exposure;
+
+            plantsArray.push(plantObj);
           }
-          plantsArray.push(plantObj);
         }
       }
       return plantsArray;
@@ -131,8 +143,14 @@ export default {
           plantToUpdate: this.plantsRef[id]
         }
       });
-      // console.log("item", this.plantsRef[id]);
-      // console.log(this.$firebaseRefs.plantsRef.child(id));
+    },
+    replaceAttribute: function(target, parent, attribute) {
+      for (const key in parent) {
+        const object = parent[key];
+        if (target[attribute] == key) {
+          target[attribute + "Name"] = object.name;
+        }
+      }
     }
   }
 };
