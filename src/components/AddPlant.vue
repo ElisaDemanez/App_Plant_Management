@@ -24,6 +24,13 @@
         :prefilledText="speciesNameToUpdate"
         :UnfilteredData="speciesRef"/>
         <br>
+        <AutocompleteDropdown v-if="selectedSpecies != null"
+        customId="Subspecies"
+        v-model="selectedSubspecies"
+        :prefilledValue="subspeciesIDToUpdate" 
+        :prefilledText="subspeciesNameToUpdate" 
+        :UnfilteredData="subspeciesRef"/>
+        <br>
       <v-text-field id='name'  v-model='name' label = 'Subspecies name ' />
       <input type='submit' value='Submit'  >
     </form>
@@ -49,12 +56,14 @@ export default {
       name: "",
       selectedSeller: null,
       selectedSpecies: null,
-
+      selectedSubspecies: null,
       existingID: null,
       sellerIDToUpdate: null,
       sellerNameToUpdate: null,
       speciesIDToUpdate: null,
-      speciesNameToUpdate: null
+      speciesNameToUpdate: null,
+      subspeciesIDToUpdate: null,
+      subspeciesNameToUpdate: null,
     };
   },
   props: {
@@ -81,24 +90,20 @@ export default {
       this.name = plant.name;
       this.sellerNameToUpdate = plant.sellerName;
       this.sellerIDToUpdate = plant.seller;
-       this.speciesNameToUpdate = plant.speciesName;
+      this.speciesNameToUpdate = plant.speciesName;
       this.speciesIDToUpdate = plant.species;
+      //       subspeciesIDToUpdate: null,
+      // subspeciesNameToUpdate: null,
     }
   },
   computed: {
-    // sellers: function() {
-    //   var temp = [];
-    //   // db doest seems to work in mounted
-    //   this.sellersRef.forEach(function(childSnapshot) {
-    //     var childKey = childSnapshot[".key"];
-    //     var childData = childSnapshot.name;
-    //     temp.push([childKey, childData]);
-    //   });
-    //   return temp;
-    // }
+    subspeciesRef: function() {
+      return this.speciesRef[this.selectedSpecies];
+    }
   },
   methods: {
     formValidation: function(e) {
+      console.log(this.selectedSpecies, typeof this.selectedSpecies);
       this.errors = [];
       if (!this.name) this.errors.push("Name empty.");
       else {
@@ -159,9 +164,10 @@ export default {
 
       connection.ref("plants/" + id).set(
         {
-          name: this.name,
           seller: this.selectedSeller,
-          species : this.selectedSpecies,
+          species: this.selectedSpecies,
+          subsp: this.selectedSubspecies,
+          name: this.name,
           id: id
         },
         function(error) {
