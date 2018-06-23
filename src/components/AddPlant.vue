@@ -24,7 +24,9 @@
         :prefilledText="speciesNameToUpdate"
         :UnfilteredData="speciesRef"/>
         <br>
-        <AutocompleteDropdown v-if="selectedSpecies !== null"
+   
+        <!-- {{this.$route.params.plantToUpdate}} -->
+        <AutocompleteDropdown v-if="this.selectedSpecies !== null || typeof this.$route.params.plantToUpdate !=='undefined'"
         customId="Subspecies"
         v-model="selectedSubspecies"
         :prefilledValue="subspeciesIDToUpdate" 
@@ -92,13 +94,22 @@ export default {
       this.sellerIDToUpdate = plant.seller;
       this.speciesNameToUpdate = plant.speciesName;
       this.speciesIDToUpdate = plant.species;
-      //       subspeciesIDToUpdate: null,
-      // subspeciesNameToUpdate: null,
+      this.subspeciesIDToUpdate = plant.subsp;
+      this.subspeciesNameToUpdate = plant.subspName;
     }
   },
   computed: {
     subspeciesRef: function() {
-      return this.speciesRef[this.selectedSpecies];
+      console.log("tick");
+      if (this.selectedSpecies)
+        var temp = this.speciesRef[this.selectedSpecies];
+      else
+        var temp = this.speciesRef[
+          this.$route.params.plantToUpdate.species
+        ];
+
+      console.log("temp", this.speciesRef, temp);
+      return temp;
     }
   },
   methods: {
@@ -126,7 +137,6 @@ export default {
       connection.ref("aiID").set({ count: String(this.aiID) });
     },
     checkAutocomplete: function(elementID, firebaseRef) {
-      console.log(elementID);
       var item = document.getElementById(elementID).value;
       var isInArray = false;
 
