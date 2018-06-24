@@ -1,46 +1,56 @@
 <template>
   <div class="liste">
-       <v-container> {{ totalPlantCount }} corresponding plants </v-container>
-           
-        <v-card >
-       <v-list two-line>
-          <template v-for="(plant, index) in plants">
-            
-           <v-list-tile  :key="plant.id" avatar ripple @click="{}">
-              <v-list-tile-content :key="index">
-                <v-list-tile-title>
-                  #{{plant.id}}:   
-                  <strong v-if="plant.speciesName"  v-html="plant.speciesName.slice(0, 4) + '.'">
-                  </strong> 
-                  {{plant.subspName}} 
-                </v-list-tile-title>
-                <v-list-tile-sub-title>
-                   <v-layout row justify-space-between>
-                      <v-flex xs10>
-                        <span class="text-xs-right">{{plant.exposure}}</span>
-                      </v-flex>
-                      <v-flex xs2>
-                         <span class="text-xs-left">{{plant.temperature}}°</span>   
-                      </v-flex>
-                    </v-layout>
-                </v-list-tile-sub-title>
-               
-              </v-list-tile-content>
-              <v-list-tile-action>
-         
-              <v-icon  @click="updatePlant(plant.id)"   color="teal">update</v-icon>
-            
-              <v-icon  @click="deletePlant(plant.id)" color="deep-orange darken-2">delete</v-icon>
-              
+    <v-container> {{ totalPlantCount }} corresponding plants </v-container>
+    <v-layout row wrap>
+      <v-flex xs6>
+        <!-- <v-select v-model="searchSeller" :items="sellersRef.name" label="Seller" multi-line></v-select> -->
+      </v-flex>
+      <v-flex xs6>
+        <v-text-field v-model="searchTxt" label="Search ( on species)" append-icon="search"></v-text-field>
+      </v-flex>
+    </v-layout>
+    <v-card>
+      <v-list two-line>
+        <template v-for="(plant, index) in plants">
+
+          <v-list-tile :key="plant.id" avatar ripple @click="{}">
+            <v-list-tile-content :key="index">
+              <v-list-tile-title>
+                #{{plant.id}}:
+                <strong v-if="plant.speciesName" v-html="plant.speciesName.slice(0, 4) + '.'">
+                </strong>
+                {{plant.subspName}}
+              </v-list-tile-title>
+              <v-list-tile-sub-title>
+                <v-layout row justify-space-between>
+                  <v-flex xs10>
+                    <span class="text-xs-right">{{plant.exposure}}</span>
+                  </v-flex>
+                  <v-flex xs2>
+                    <span class="text-xs-left">{{plant.temperature}}°</span>
+                  </v-flex>
+                </v-layout>
+              </v-list-tile-sub-title>
+
+            </v-list-tile-content>
+            <v-list-tile-action>
+
+              <v-icon @click="updatePlant(plant.id)" color="teal">update</v-icon>
+
+              <v-icon @click="deletePlant(plant.id)" color="deep-orange darken-2">delete</v-icon>
+
             </v-list-tile-action>
-           </v-list-tile>
-            <v-divider :key="index" inset ></v-divider>
-          </template>
-            <v-pagination :length="totalPages" v-model="activePage"></v-pagination>
-        </v-list>
-  </v-card>
+          </v-list-tile>
+          <v-divider :key="index" inset></v-divider>
+        </template>
+        <v-pagination :length="totalPages" v-model="activePage"></v-pagination>
+      </v-list>
+      <!-- {{filteredPlantsIndexes}}
+{{plants}} -->
+
+    </v-card>
     <v-btn @click="$forceUpdate()">Click me</v-btn>
-  
+
   </div>
 
 </template>
@@ -48,7 +58,7 @@
 <script>
 /* eslint-disable */
 
-import { connection, sellers } from "@/components/firebase.js";
+import { connection } from "@/components/firebase.js";
 
 export default {
   name: "Liste",
@@ -57,8 +67,9 @@ export default {
       loading: true,
       totalPages: null,
       activePage: 1,
-      plantsPerPage: 6, 
-      totalPlantCount : 0
+      plantsPerPage: 6,
+      totalPlantCount: 0,
+      searchTxt: ""
     };
   },
   firebase: {
@@ -75,19 +86,46 @@ export default {
       asObject: true
     }
   },
-  created: function() {
-    // plantsRef is undefined at the creation, so for now a each page change im checking if it contains plants
-    // this.plantsObject = this.plantsRef;
-    // // delete last object that is the name of the table
-    // var lastItemKey = Object.keys(this.plantsObject)[
-    //   Object.keys(this.plantsObject).length - 1
-    // ];
-    // console.log(this.plantsRef[lastItemKey]);
-    // // apparently delete is bad. sorry.
-    // delete this.plantsObject[lastItemKey];
-  },
-
   computed: {
+    plantsCompleted: function() {
+      var plantsArray = {};
+      var self = this;
+      var plantsObject = this.plantsRef;
+
+      var keys = Object.keys(plantsObject).filter(function(key) {
+        return plantsObject[key];
+      });
+      for (let index = 0; index < keys.length; index++) {
+        const element = keys[index];
+
+        if (typeof plantsObject[element] != "string" && plantsObject[element]) {
+          var plantObj = plantsObject[element];
+
+          // else for the last page, it bugs
+          if (typeof plantObj !== "undefined" && element !== ".key") {
+            this.completePlantInfos(plantObj);
+            plantsArray[parseInt(plantObj.id)] = plantObj;
+          }
+        }
+      }
+      return plantsArray;
+    },
+    filteredPlantsIndexes: function() {
+      let self = this;
+      let filtered = Object.keys(this.plantsCompleted).filter(function(index) {
+        // Filter on title
+        var plant = self.plantsRef[index];
+        if (plant.id) {
+          let species = self.normlizeText(plant.speciesName);
+          let subsp = self.normlizeText(plant.subspName);
+          let searchTxt = self.normlizeText(self.searchTxt);
+          let filter1 = species.indexOf(searchTxt) >= 0;
+
+          return filter1;
+        }
+      });
+      return filtered;
+    },
     plants: function() {
       var plantsArray = [];
       var self = this;
@@ -95,13 +133,15 @@ export default {
 
       // pagination
       var keys = Object.keys(plantsObject).filter(function(key) {
-        return plantsObject[key];
+        // console.log(key,self.filteredPlantsIndexes.includes(key));
+        return self.filteredPlantsIndexes.includes(key);
       });
       // -1 because there's one i don't display at the end
       this.totalPages = Math.ceil((keys.length - 1) / this.plantsPerPage);
-      this.totalPlantCount = keys.length - 1;
       const lastPlant = this.activePage * this.plantsPerPage;
       const firstPlant = lastPlant - this.plantsPerPage;
+
+      this.totalPlantCount = keys.length - 1;
 
       for (let index = firstPlant; index < lastPlant; index++) {
         const element = keys[index];
@@ -138,14 +178,6 @@ export default {
         }
       });
     },
-    replaceAttribute: function(target, parent, attribute) {
-      for (const key in parent) {
-        const object = parent[key];
-        if (target[attribute] == key) {
-          target[attribute + "Name"] = object.name;
-        }
-      }
-    },
     completePlantInfos: function(plantObj) {
       plantObj["speciesName"] = this.speciesRef[plantObj.species].name;
       plantObj["sellerName"] = this.sellersRef[plantObj.seller].name;
@@ -153,7 +185,24 @@ export default {
       plantObj["subspName"] = subsp.name;
       plantObj["temperature"] = subsp.temperature;
       plantObj["exposure"] = subsp.exposure;
+    },
+    normlizeText: function(str) {
+      // Change to lower case and remove first & last spaces
+      str = str.toLowerCase().trim();
+      // Remove accents
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
+  },
+  created: function() {
+    // plantsRef is undefined at the creation, so for now a each page change im checking if it contains plants
+    // this.plantsObject = this.plantsRef;
+    // // delete last object that is the name of the table
+    // var lastItemKey = Object.keys(this.plantsObject)[
+    //   Object.keys(this.plantsObject).length - 1
+    // ];
+    // console.log(this.plantsRef[lastItemKey]);
+    // // apparently delete is bad. sorry.
+    // delete this.plantsObject[lastItemKey];
   }
 };
 </script>
