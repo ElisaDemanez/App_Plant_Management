@@ -1,10 +1,7 @@
 <template>
   <div class="liste">
-
-            <!-- <v-subheader v-if="plant.header" :key="plant.header">{{ plant.header }}</v-subheader>
-            <v-divider v-else-if="plant.divider" :inset="plant.inset" :key="index"></v-divider> -->
-            <!-- <v-list-tile v-else :key="plant.id" avatar > -->
-
+       <v-container> {{ totalPlantCount }} corresponding plants </v-container>
+           
         <v-card >
        <v-list two-line>
           <template v-for="(plant, index) in plants">
@@ -58,10 +55,10 @@ export default {
   data() {
     return {
       loading: true,
-
       totalPages: null,
       activePage: 1,
-      plantsPerPage: 6
+      plantsPerPage: 6, 
+      totalPlantCount : 0
     };
   },
   firebase: {
@@ -102,6 +99,7 @@ export default {
       });
       // -1 because there's one i don't display at the end
       this.totalPages = Math.ceil((keys.length - 1) / this.plantsPerPage);
+      this.totalPlantCount = keys.length - 1;
       const lastPlant = this.activePage * this.plantsPerPage;
       const firstPlant = lastPlant - this.plantsPerPage;
 
@@ -113,13 +111,7 @@ export default {
 
           // else for the last page, it bugs
           if (typeof plantObj !== "undefined" && element !== ".key") {
-            plantObj["speciesName"] = this.speciesRef[plantObj.species].name;
-            plantObj["sellerName"] = this.sellersRef[plantObj.seller].name;
-            var subsp = this.speciesRef[plantObj.species][plantObj.subsp];
-            plantObj["subspName"] = subsp.name;
-            plantObj["temperature"] = subsp.temperature;
-            plantObj["exposure"] = subsp.exposure;
-
+            this.completePlantInfos(plantObj);
             plantsArray.push(plantObj);
           }
         }
@@ -153,6 +145,14 @@ export default {
           target[attribute + "Name"] = object.name;
         }
       }
+    },
+    completePlantInfos: function(plantObj) {
+      plantObj["speciesName"] = this.speciesRef[plantObj.species].name;
+      plantObj["sellerName"] = this.sellersRef[plantObj.seller].name;
+      var subsp = this.speciesRef[plantObj.species][plantObj.subsp];
+      plantObj["subspName"] = subsp.name;
+      plantObj["temperature"] = subsp.temperature;
+      plantObj["exposure"] = subsp.exposure;
     }
   }
 };
