@@ -39,6 +39,14 @@
            </v-list-tile>
             <v-divider :key="'y'+index" inset ></v-divider>
           </template>
+                    
+           <v-list-tile v-if="linkAdd" ripple @mousedown.prevent
+             class ="smaller_height" value="Ajouter" :to="{name:linkAdd, params :{ object : linkAddParams}}">
+              <v-list-tile-content >
+                  Ajouter 
+              </v-list-tile-content> 
+           </v-list-tile>
+            <!-- <v-divider v-if="linkAdd"  inset ></v-divider> -->
         </v-list>
   </div>
     </div>
@@ -61,7 +69,9 @@ export default {
     UnfilteredData: Object,
     customId: String,
     prefilledValue: String || Number,
-    prefilledText: String
+    prefilledText: String,
+    linkAdd: String,
+    linkAddParams : String
   },
   created() {
     // if it's an update

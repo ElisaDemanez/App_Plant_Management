@@ -15,23 +15,27 @@
         v-model="selectedSeller"
         :prefilledValue="sellerIDToUpdate"
         :prefilledText="sellerNameToUpdate"
-        :UnfilteredData="sellersRef"/>
+        :UnfilteredData="sellersRef"
+        :linkAdd="'AjouterMisc'"
+        :linkAddParams="'sellers'"/>
         <br>
      <AutocompleteDropdown
         customId="Species"
         v-model="selectedSpecies"
         :prefilledValue="speciesIDToUpdate"
         :prefilledText="speciesNameToUpdate"
-        :UnfilteredData="speciesRef"/>
+        :UnfilteredData="speciesRef"
+        :linkAdd="'AjouterMisc'"
+        :linkAddParams="'species'"/>
         <br>
    
-        <!-- {{this.$route.params.plantToUpdate}} -->
         <AutocompleteDropdown v-if="this.selectedSpecies !== null || typeof this.$route.params.plantToUpdate !=='undefined'"
         customId="Subspecies"
         v-model="selectedSubspecies"
         :prefilledValue="subspeciesIDToUpdate" 
         :prefilledText="subspeciesNameToUpdate" 
-        :UnfilteredData="subspeciesRef"/>
+        :UnfilteredData="subspeciesRef"
+        :linkAdd="'AjouterSousespèce'"/>
         <br>
       <v-text-field id='description'  v-model='description' label = 'Additional infos' />
       <v-container>
