@@ -6,7 +6,7 @@
         <!-- <v-select v-model="searchSeller" :items="sellersRef.name" label="Seller" multi-line></v-select> -->
       </v-flex>
       <v-flex xs6>
-        <v-text-field v-model="searchTxt" label="Search ( on species)" append-icon="search"></v-text-field>
+        <v-text-field v-model="searchTxt" label="Search on name " placeholder="ex: 'eche prolif' " append-icon="search"></v-text-field>
       </v-flex>
     </v-layout>
     <v-card>
@@ -119,9 +119,16 @@ export default {
           let species = self.normlizeText(plant.speciesName);
           let subsp = self.normlizeText(plant.subspName);
           let searchTxt = self.normlizeText(self.searchTxt);
-          let filter1 = species.indexOf(searchTxt) >= 0;
+          let arrSearchTxt = searchTxt.split(" ");
+          // if mutiple words
+          var wordMatch = [];
+          arrSearchTxt.forEach(element => {
+            let filter1 =
+              species.indexOf(element) >= 0 || subsp.indexOf(element) >= 0;
+            wordMatch.push(filter1);
+          });
 
-          return filter1;
+          return !wordMatch.includes(false);
         }
       });
       return filtered;
@@ -133,15 +140,13 @@ export default {
 
       // pagination
       var keys = Object.keys(plantsObject).filter(function(key) {
-        // console.log(key,self.filteredPlantsIndexes.includes(key));
         return self.filteredPlantsIndexes.includes(key);
       });
-      // -1 because there's one i don't display at the end
-      this.totalPages = Math.ceil((keys.length - 1) / this.plantsPerPage);
+      this.totalPages = Math.ceil(keys.length / this.plantsPerPage);
       const lastPlant = this.activePage * this.plantsPerPage;
       const firstPlant = lastPlant - this.plantsPerPage;
 
-      this.totalPlantCount = keys.length - 1;
+      this.totalPlantCount = keys.length;
 
       for (let index = firstPlant; index < lastPlant; index++) {
         const element = keys[index];
@@ -192,17 +197,6 @@ export default {
       // Remove accents
       return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
-  },
-  created: function() {
-    // plantsRef is undefined at the creation, so for now a each page change im checking if it contains plants
-    // this.plantsObject = this.plantsRef;
-    // // delete last object that is the name of the table
-    // var lastItemKey = Object.keys(this.plantsObject)[
-    //   Object.keys(this.plantsObject).length - 1
-    // ];
-    // console.log(this.plantsRef[lastItemKey]);
-    // // apparently delete is bad. sorry.
-    // delete this.plantsObject[lastItemKey];
   }
 };
 </script>
