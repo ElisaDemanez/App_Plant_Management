@@ -15,26 +15,24 @@
         <v-card>
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
-              <v-flex xs5>Order by id :
-             <v-radio-group v-model="idOrder" class="pt-0">
-              <v-radio key="desc" value="desc" label="Desc" />
-              <v-radio key="asc" value="asc" label="Asc" />
+              <v-flex xs5>Order by ID :
+             <v-radio-group v-model="orderBy" class="pt-0">
+              <v-radio key="IDdesc" value="IDdesc" label="Desc" />
+              <v-radio key="IDasc" value="IDasc" label="Asc" />
             </v-radio-group>
           </v-flex>
-         <v-flex xs5>Order by id :
-             <v-radio-group v-model="idOrder" class="pt-0">
-              <v-radio key="desc" value="desc" label="Desc" />
-              <v-radio key="asc" value="asc" label="Asc" />
+         <v-flex xs5>Order by temperature :
+             <v-radio-group v-model="orderBy" class="pt-0">
+           <v-radio key="TempDesc" value="TempDesc" label="Desc" />
+              <v-radio key="TempAsc" value="TempAsc" label="Asc" />
             </v-radio-group>
           </v-flex>  <v-flex xs5>Order by id :
-             <v-radio-group v-model="idOrder" class="pt-0">
-              <v-radio key="desc" value="desc" label="Desc" />
-              <v-radio key="asc" value="asc" label="Asc" />
+             <v-radio-group v-model="orderBy" class="pt-0">
+              
             </v-radio-group>
           </v-flex>  <v-flex xs5>Order by id :
-             <v-radio-group v-model="idOrder" class="pt-0">
-              <v-radio key="desc" value="desc" label="Desc" />
-              <v-radio key="asc" value="asc" label="Asc" />
+             <v-radio-group v-model="orderBy" class="pt-0">
+             
             </v-radio-group>
           </v-flex>
           </v-layout>
@@ -67,7 +65,7 @@ export default {
       plantsPerPage: 6,
       totalPlantCount: 0,
       searchTxt: "",
-      idOrder: ""
+      orderBy: ""
     };
   },
   components: {
@@ -146,9 +144,11 @@ export default {
       var keys = Object.keys(plantsObject).filter(function(key) {
         return self.filteredPlantsIndexes.includes(key);
       });
-      if (this.searchTxt || this.idOrder) {
-        this.sortPlants(keys);
-        this.activePage = 1;
+
+      // if search params
+      if (this.searchTxt || this.orderBy) {
+        this.sortbyId(keys);
+        // this.activePage = 1;
       }
       this.totalPlantCount = keys.length;
       this.totalPages = Math.ceil(keys.length / this.plantsPerPage);
@@ -168,6 +168,7 @@ export default {
           }
         }
       }
+      console.log(plantsArray);
       return plantsArray;
     }
   },
@@ -180,19 +181,21 @@ export default {
       plantObj["temperature"] = subsp.temperature;
       plantObj["exposure"] = subsp.exposure;
     },
-    sortPlants: function(keys) {
+    sortbyId: function(keys) {
       var self = this;
-      if (self.idOrder) {
-        if (self.idOrder == "asc") {
+      if (self.orderBy) {
+        console.log("ici", self.orderBy);
+        if (self.orderBy == "IDasc" || self.orderBy == "IDdesc") {
           keys.sort(function(a, b) {
-            return a - b;
+            return self.orderBy == "IDasc" ? a - b : b - a;
           });
         }
-        if (self.idOrder == "desc") {
-          keys.sort(function(a, b) {
-            return b - a;
-          });
-        }
+        //  else if (self.orderBy == "TempAsc" || self.orderBy == "TempDesc") {
+        //   keys.sort(function(a, b) {
+        //     console.log("là", a, b);
+        //     return self.orderBy == "Tempasc" ? a - b : b - a;
+        //   });
+        // }
       }
     },
     normlizeText: function(str) {
