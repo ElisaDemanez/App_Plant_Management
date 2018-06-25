@@ -142,7 +142,6 @@ export default {
     },
     checkAutocomplete: function(elementID, firebaseRef) {
       var item = document.getElementById(elementID).value;
-      console.log(item);
       var isInArray = false;
 
       for (const key in firebaseRef) {
@@ -184,7 +183,6 @@ export default {
 };
 </script>
 
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped >
 #form {
   display: flex;

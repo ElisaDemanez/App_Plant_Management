@@ -89,7 +89,6 @@ export default {
   computed: {},
   methods: {
     formValidation: function(e) {
-      console.log(this.selectedSpecies, typeof this.selectedSpecies);
       if (this.selectedSpecies == null) {
         this.errors.push("Choose a species");
         return;
@@ -100,7 +99,6 @@ export default {
         for (const key in object) {
           if (object.hasOwnProperty(key)) {
             const element = object[key];
-            console.log(element);
             if (typeof element.name !== "undefined") {
               if (this.name.toLowerCase() == element.name.toLowerCase()) {
                 alreadyIn = true;
@@ -121,15 +119,9 @@ export default {
         }
       }
     }
-    //  @species-selected="speciesSelected"
-    // speciesSelected: function(speciesID) {
-    //   this.speciesID = speciesID;
-    //   console.log(this.selectedSpecies);
-    // }
   }
 };
 </script>
 
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped >
 </style>

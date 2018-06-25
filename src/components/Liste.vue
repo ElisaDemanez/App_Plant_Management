@@ -1,11 +1,11 @@
 <template>
   <div class="liste">
-    <v-container> {{ totalPlantCount }} corresponding plants </v-container>
+    <p> There is <i>{{ totalPlantCount }}</i> corresponding plants </p>
     <v-layout row wrap>
-      <v-flex xs6>
+      <v-flex md6 xs4>
         <!-- <v-select v-model="searchSeller" :items="sellersRef.name" label="Seller" multi-line></v-select> -->
       </v-flex>
-      <v-flex xs6>
+      <v-flex md6 xs8>
         <v-text-field v-model="searchTxt" label="Search on name " placeholder="ex: 'eche prolif' " append-icon="search"></v-text-field>
       </v-flex>
     </v-layout>
@@ -17,7 +17,9 @@
             <v-list-tile-content :key="index">
               <v-list-tile-title>
                 #{{plant.id}}:
-                <strong v-if="plant.speciesName" v-html="plant.speciesName.slice(0, 4) + '.'">
+                <strong v-if="plant.speciesName" class="hidden-sm-and-down" v-html="plant.speciesName">
+                </strong>
+                <strong v-if="plant.speciesName" class="hidden-sm-and-up" v-html="plant.speciesName.slice(0, 4) + '.'">
                 </strong>
                 {{plant.subspName}}
               </v-list-tile-title>
