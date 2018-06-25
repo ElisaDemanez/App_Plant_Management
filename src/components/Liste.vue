@@ -3,7 +3,27 @@
     <p> There is <i>{{ totalPlantCount }}</i> corresponding plants </p>
     <v-layout row wrap>
       <v-flex md6 xs4>
-        <!-- <v-select v-model="searchSeller" :items="sellersRef.name" label="Seller" multi-line></v-select> -->
+    <v-layout row wrap>
+        
+      <v-flex md6>Order by id :
+      </v-flex>
+       <v-flex md6>
+               
+     <v-radio-group v-model="idOrder" class ="pt-0">
+      <v-radio
+        key="desc"
+        value="desc"
+        label ="Desc"
+      />
+           <v-radio
+        key="asc"
+        value="asc"
+        label ="Asc"
+      />
+    </v-radio-group>
+      
+      </v-flex>
+    </v-layout>
       </v-flex>
       <v-flex md6 xs8>
         <v-text-field v-model="searchTxt" label="Search on name " placeholder="ex: 'eche prolif' " append-icon="search"></v-text-field>
@@ -47,8 +67,6 @@
         </template>
         <v-pagination :length="totalPages" v-model="activePage"></v-pagination>
       </v-list>
-      <!-- {{filteredPlantsIndexes}}
-{{plants}} -->
 
     </v-card>
     <v-btn @click="$forceUpdate()">Click me</v-btn>
@@ -71,7 +89,8 @@ export default {
       activePage: 1,
       plantsPerPage: 6,
       totalPlantCount: 0,
-      searchTxt: ""
+      searchTxt: "",
+      idOrder: ""
     };
   },
   firebase: {
@@ -121,8 +140,8 @@ export default {
           let species = self.normlizeText(plant.speciesName);
           let subsp = self.normlizeText(plant.subspName);
           let searchTxt = self.normlizeText(self.searchTxt);
+          // Filter 1 on name if multiple words
           let arrSearchTxt = searchTxt.split(" ");
-          // if mutiple words
           var wordMatch = [];
           arrSearchTxt.forEach(element => {
             let filter1 =
@@ -133,6 +152,7 @@ export default {
           return !wordMatch.includes(false);
         }
       });
+
       return filtered;
     },
     plants: function() {
@@ -144,6 +164,7 @@ export default {
       var keys = Object.keys(plantsObject).filter(function(key) {
         return self.filteredPlantsIndexes.includes(key);
       });
+      this.sortPlants(keys);
       this.totalPages = Math.ceil(keys.length / this.plantsPerPage);
       const lastPlant = this.activePage * this.plantsPerPage;
       const firstPlant = lastPlant - this.plantsPerPage;
@@ -193,6 +214,21 @@ export default {
       plantObj["temperature"] = subsp.temperature;
       plantObj["exposure"] = subsp.exposure;
     },
+    sortPlants: function(keys) {
+      var self = this;
+      if (self.idOrder) {
+        if (self.idOrder == "asc") {
+          keys.sort(function(a, b) {
+            return a - b;
+          });
+        }
+        if (self.idOrder == "desc") {
+          keys.sort(function(a, b) {
+            return b - a;
+          });
+        }
+      }
+    },
     normlizeText: function(str) {
       // Change to lower case and remove first & last spaces
       str = str.toLowerCase().trim();
@@ -203,5 +239,6 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+
 </style>
