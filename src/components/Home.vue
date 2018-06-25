@@ -1,7 +1,6 @@
 <template>
   <div class="liste">
-    <!-- <p> There is -->
-      <!-- <i>{{ totalPlantCount }}</i> corresponding plants </p> -->
+    <p> There is <i>{{ totalPlantCount }}</i> corresponding plants </p>
     <v-layout row wrap>
       <v-flex md6 xs4>
         <v-btn color="primary" dark @click.stop="additionalFilters = true">Open filter</v-btn>
@@ -11,44 +10,60 @@
         <v-text-field v-model="searchTxt" label="Search on name " placeholder="ex: 'eche prolif' " append-icon="search"></v-text-field>
       </v-flex>
     </v-layout>
-      <v-dialog v-model="additionalFilters" max-width="600px" transition="dialog-bottom-transition">
-        <v-card>
+    <v-dialog v-model="additionalFilters" max-width="600px" transition="dialog-bottom-transition">
+      <v-card>
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
-              <v-flex xs5>Order by ID :
-             <v-radio-group v-model="orderBy" class="pt-0">
-              <v-radio key="IDdesc" value="IDdesc" label="Desc" />
-              <v-radio key="IDasc" value="IDasc" label="Asc" />
-            </v-radio-group>
-          </v-flex>
-         <v-flex xs5>Order by temperature :
-             <v-radio-group v-model="orderBy" class="pt-0">
-           <v-radio key="TempDesc" value="TempDesc" label="Desc" />
-              <v-radio key="TempAsc" value="TempAsc" label="Asc" />
-            </v-radio-group>
-          </v-flex>  <v-flex xs5>Order by id :
-             <v-radio-group v-model="orderBy" class="pt-0">
-              
-            </v-radio-group>
-          </v-flex>  <v-flex xs5>Order by id :
-             <v-radio-group v-model="orderBy" class="pt-0">
-             
-            </v-radio-group>
-          </v-flex>
+            <v-flex xs12 md6 >
+              <v-card color="grey lighten-4">
+                <v-card-title primary-title>
+                  Order by ID :
+                </v-card-title>
+                <v-radio-group v-model="orderBy" class="pt-0">
+                  <v-radio key="IDdesc" value="IDdesc" label="Desc" />
+                  <v-radio key="IDasc" value="IDasc" label="Asc" />
+                </v-radio-group>
+              </v-card>
+            </v-flex>
+             <v-flex xs12 md6 >
+              <v-card color="grey lighten-4">
+                <v-card-title primary-title>
+                 Order by temperature :
+                </v-card-title>
+                <v-radio-group v-model="orderBy" class="pt-0">
+                  <v-radio key="TempDesc" value="TempDesc" label="Desc" />
+                  <v-radio key="TempAsc" value="TempAsc" label="Asc" />
+                </v-radio-group>
+              </v-card>
+            </v-flex>
+        
+            <!-- <v-flex xs12 md6>
+              <v-card>Order by id :
+                <v-radio-group v-model="orderBy" class="pt-0">
+
+                </v-radio-group>
+              </v-card>
+            </v-flex>
+            <v-flex xs12 md6>
+              <v-card>Order by id :
+                <v-radio-group v-model="orderBy" class="pt-0">
+
+                </v-radio-group>
+              </v-card>
+            </v-flex> -->
           </v-layout>
-        </v-container></v-card>
-      </v-dialog>
+        </v-container>
+      </v-card>
+    </v-dialog>
     <v-card>
 
-<Liste :plants="plants"/>
-        <v-pagination :length="totalPages" v-model="activePage" 
-        ></v-pagination>
+      <Liste :plants="plants" />
+
     </v-card>
 
   </div>
 
 </template>
-
 <script>
 /* eslint-disable */
 
@@ -60,9 +75,6 @@ export default {
   data() {
     return {
       additionalFilters: false,
-      totalPages: null,
-      activePage: 2,
-      plantsPerPage: 6,
       totalPlantCount: 0,
       searchTxt: "",
       orderBy: ""
@@ -135,7 +147,6 @@ export default {
       return filtered;
     },
     plants: function() {
-      console.log(this.db);
       var plantsArray = [];
       var self = this;
       var plantsObject = this.plantsRef;
@@ -146,16 +157,10 @@ export default {
       });
 
       // if search params
-      if (this.searchTxt || this.orderBy) {
-        this.sortbyId(keys);
-        // this.activePage = 1;
-      }
-      this.totalPlantCount = keys.length;
-      this.totalPages = Math.ceil(keys.length / this.plantsPerPage);
-      const lastPlant = this.activePage * this.plantsPerPage;
-      const firstPlant = lastPlant - this.plantsPerPage;
 
-      for (let index = firstPlant; index < lastPlant; index++) {
+      this.totalPlantCount = keys.length;
+
+      for (let index = 0; index < keys.length; index++) {
         const element = keys[index];
 
         if (typeof plantsObject[element] != "string" && plantsObject[element]) {
@@ -167,6 +172,10 @@ export default {
             plantsArray.push(plantObj);
           }
         }
+      }
+      if (this.searchTxt || this.orderBy) {
+        this.sortbyId(plantsArray);
+        // this.activePage = 1;
       }
       console.log(plantsArray);
       return plantsArray;
@@ -184,18 +193,17 @@ export default {
     sortbyId: function(keys) {
       var self = this;
       if (self.orderBy) {
-        console.log("ici", self.orderBy);
         if (self.orderBy == "IDasc" || self.orderBy == "IDdesc") {
           keys.sort(function(a, b) {
-            return self.orderBy == "IDasc" ? a - b : b - a;
+            return self.orderBy == "IDasc" ? a.id - b.id : b.id - a.id;
+          });
+        } else if (self.orderBy == "TempAsc" || self.orderBy == "TempDesc") {
+          keys.sort(function(a, b) {
+            const c = parseInt(a.temperature);
+            const d = parseInt(b.temperature);
+            return self.orderBy == "TempAsc" ? c - d : d - c;
           });
         }
-        //  else if (self.orderBy == "TempAsc" || self.orderBy == "TempDesc") {
-        //   keys.sort(function(a, b) {
-        //     console.log("là", a, b);
-        //     return self.orderBy == "Tempasc" ? a - b : b - a;
-        //   });
-        // }
       }
     },
     normlizeText: function(str) {
