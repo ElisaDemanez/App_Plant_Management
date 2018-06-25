@@ -1,35 +1,52 @@
 <template>
   <div class="liste">
-    <p> There is <i>{{ totalPlantCount }}</i> corresponding plants </p>
+    <p> There is
+      <i>{{ totalPlantCount }}</i> corresponding plants </p>
     <v-layout row wrap>
       <v-flex md6 xs4>
-    <v-layout row wrap>
-        
-      <v-flex md6>Order by id :
+        <v-btn color="primary" dark @click.stop="additionalFilters = true">Open filter</v-btn>
       </v-flex>
-       <v-flex md6>
-               
-     <v-radio-group v-model="idOrder" class ="pt-0">
-      <v-radio
-        key="desc"
-        value="desc"
-        label ="Desc"
-      />
-           <v-radio
-        key="asc"
-        value="asc"
-        label ="Asc"
-      />
-    </v-radio-group>
-      
-      </v-flex>
-    </v-layout>
-      </v-flex>
+
+
       <v-flex md6 xs8>
         <v-text-field v-model="searchTxt" label="Search on name " placeholder="ex: 'eche prolif' " append-icon="search"></v-text-field>
       </v-flex>
     </v-layout>
+      <v-dialog v-model="additionalFilters" max-width="600px" transition="dialog-bottom-transition">
+        <v-card>
+        <v-container fluid grid-list-sm>
+          <v-layout row wrap>
+              <v-flex xs5>Order by id :
+             <v-radio-group v-model="idOrder" class="pt-0">
+              <v-radio key="desc" value="desc" label="Desc" />
+              <v-radio key="asc" value="asc" label="Asc" />
+            </v-radio-group>
+          </v-flex>
+         <v-flex xs5>Order by id :
+             <v-radio-group v-model="idOrder" class="pt-0">
+              <v-radio key="desc" value="desc" label="Desc" />
+              <v-radio key="asc" value="asc" label="Asc" />
+            </v-radio-group>
+          </v-flex>  <v-flex xs5>Order by id :
+             <v-radio-group v-model="idOrder" class="pt-0">
+              <v-radio key="desc" value="desc" label="Desc" />
+              <v-radio key="asc" value="asc" label="Asc" />
+            </v-radio-group>
+          </v-flex>  <v-flex xs5>Order by id :
+             <v-radio-group v-model="idOrder" class="pt-0">
+              <v-radio key="desc" value="desc" label="Desc" />
+              <v-radio key="asc" value="asc" label="Asc" />
+            </v-radio-group>
+          </v-flex>
+          </v-layout>
+        </v-container></v-card>
+      </v-dialog>
     <v-card>
+
+
+
+
+
       <v-list two-line>
         <template v-for="(plant, index) in plants">
 
@@ -84,7 +101,7 @@ export default {
   name: "Liste",
   data() {
     return {
-      loading: true,
+      additionalFilters: false,
       totalPages: null,
       activePage: 1,
       plantsPerPage: 6,
@@ -165,11 +182,11 @@ export default {
         return self.filteredPlantsIndexes.includes(key);
       });
       this.sortPlants(keys);
+      this.totalPlantCount = keys.length;
+      this.activePage = 1;
       this.totalPages = Math.ceil(keys.length / this.plantsPerPage);
       const lastPlant = this.activePage * this.plantsPerPage;
       const firstPlant = lastPlant - this.plantsPerPage;
-
-      this.totalPlantCount = keys.length;
 
       for (let index = firstPlant; index < lastPlant; index++) {
         const element = keys[index];
@@ -240,5 +257,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
