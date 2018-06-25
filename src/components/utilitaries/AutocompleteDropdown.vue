@@ -1,4 +1,3 @@
-
 <template>
     <div>
       
@@ -33,8 +32,7 @@
               @click="suggestionSelected(suggestion)" class ="smaller_height">
               <v-list-tile-content :key="'x'+index">
                 <v-list-tile-title v-html="suggestion[1].name"></v-list-tile-title>
-                 <!-- <v-list-tile-sub-title v-html="suggestion[1].name">
-                   </v-list-tile-sub-title>  -->
+       
               </v-list-tile-content> 
            </v-list-tile>
             <v-divider :key="'y'+index" inset ></v-divider>
@@ -46,7 +44,7 @@
                   Ajouter 
               </v-list-tile-content> 
            </v-list-tile>
-            <!-- <v-divider v-if="linkAdd"  inset ></v-divider> -->
+          
         </v-list>
   </div>
     </div>
@@ -71,7 +69,7 @@ export default {
     prefilledValue: String || Number,
     prefilledText: String,
     linkAdd: String,
-    linkAddParams : String
+    linkAddParams: String
   },
   created() {
     // if it's an update
