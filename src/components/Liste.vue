@@ -29,7 +29,7 @@
             </v-list-tile-content>
             <v-list-tile-action>
 
-              <v-icon @click="updatePlant(plant.id)" color="teal">update</v-icon>
+              <v-icon @click="updatePlant(plant)" color="teal">update</v-icon>
 
               <v-icon @click="deletePlant(plant.id)" color="deep-orange darken-2">delete</v-icon>
 
@@ -84,12 +84,12 @@ export default {
         this.$firebaseRefs.plantsRef.child(id).remove();
       }
     },
-    updatePlant: function(id) {
+    updatePlant: function(plant) {
       this.$router.push({
         name: "Ajouter",
         params: {
-          id: id,
-          plantToUpdate: this.plantsRef[id]
+          id: plant.id,
+          plantToUpdate: plant
         }
       });
     }
