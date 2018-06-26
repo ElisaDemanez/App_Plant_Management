@@ -3,31 +3,32 @@
         <v-container fluid grid-list-sm>
             <v-layout row wrap>
 
-                <template v-for="(plant, index) in plants">
-                    <v-flex xs12 md6 :key="plant.id">
-                        <v-card color="grey lighten-4">
-                            <v-list-tile :key="plant.id" avatar ripple @click="active =plant" @click.stop="dialog = true">
-                                <v-list-tile-content :key="index">
-                                    <v-list-tile-title>
+                <template v-for="(plant) in plants">
+                    <v-flex xs12 md6 :key="plant.id" @click="active=plant" @click.stop="dialog= true">
+                        <v-card :key="plant.id" avatar ripple >
+                                 <v-card-title primary-title>
+                                   <div class="body-2 font-size-bigger">
                                         #{{plant.id}}:
-                                        <strong v-if="plant.speciesName" class="hidden-sm-and-down" v-html="plant.speciesName">
+                                        <strong v-if="plant.speciesName" class="hidden-sm-and-down" v-html="plant.speciesName+ '&nbsp;'"> 
                                         </strong>
-                                        <strong v-if="plant.speciesName" class="hidden-sm-and-up" v-html="plant.speciesName.slice(0, 4) + '.'">
+                                        <strong v-if="plant.speciesName" class="hidden-sm-and-up" v-html="plant.speciesName.slice(0, 4) + '. &nbsp;'"> 
                                         </strong>
-                                        {{plant.subspName}}
-                                    </v-list-tile-title>
-                                    <v-list-tile-sub-title>
+                                        <span class="subheading">
+                                         {{plant.subspName}}
+                                         </span>
+                                         </div>
+                                    </v-card-title>
+                                    <v-card-text>
                                         <v-layout row justify-space-between>
-                                            <v-flex xs10>
-                                                <span class="text-xs-right">{{plant.exposure}}</span>
+                                            <v-flex xs8 class="text-xs-left">
+                                               {{plant.exposure}}
                                             </v-flex>
-                                            <v-flex xs2>
-                                                <span class="text-xs-left">{{plant.temperature}}°</span>
+                                            <v-flex xs4 class="text-xs-left">
+                                              {{plant.temperature}}°
                                             </v-flex>
                                         </v-layout>
-                                    </v-list-tile-sub-title>
-                                </v-list-tile-content>
-                            </v-list-tile>
+                                    </v-card-text>
+                           
                         </v-card>
                     </v-flex>
                 </template>
@@ -39,7 +40,7 @@
 
     </div>
 
-</template> 
+</template>
 
 <script>
 /* eslint-disable */
@@ -92,4 +93,7 @@ export default {
 </script>
 
 <style scoped>
+.font-size-bigger {
+  font-size: 16px !important;
+}
 </style>
