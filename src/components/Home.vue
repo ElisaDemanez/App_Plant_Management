@@ -139,6 +139,8 @@ export default {
         if (plant.id) {
           let species = self.normlizeText(plant.speciesName);
           let subsp = self.normlizeText(plant.subspName);
+          let id = plant.id.toString();
+          console.log(id)
           let searchTxt = self.normlizeText(self.searchTxt);
 
           // Filter 1 on name if multiple words
@@ -146,7 +148,7 @@ export default {
           var wordMatch = [];
           arrSearchTxt.forEach(element => {
             let filter1 =
-              species.indexOf(element) >= 0 || subsp.indexOf(element) >= 0;
+              species.indexOf(element) >= 0 || subsp.indexOf(element) >= 0 || id.indexOf(element) >= 0;
             wordMatch.push(filter1);
           });
           // filter on sellers
