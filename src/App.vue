@@ -4,7 +4,7 @@
 <NavigationTop />
   <v-container class ="body-container" d-flex  color="purple">
       <v-layout row wrap>
-        <v-flex xs12 sm8 md6 lg6 xl4 offset-sm2 offset-md3 offset-lg3 offset-sm5 >
+        <v-flex xs12 sm8 md8 lg6 xl4 offset-sm1 offset-md2 offset-lg3  >
           <router-view/>
         </v-flex>
       </v-layout>
@@ -29,13 +29,13 @@ export default {
 
 <style>
 #app {
-  /* width: 400px; */
   margin: auto;
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+}
+h2 {
+  font-weight: 100 !important;
 }
 
 @media (max-width: 960px) {

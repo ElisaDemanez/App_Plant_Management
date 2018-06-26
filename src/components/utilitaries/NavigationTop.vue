@@ -4,7 +4,7 @@
 
 
  
-   <v-toolbar class="hidden-sm-and-down navbar">
+   <v-toolbar class="hidden-xs-only navbar">
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon>   -->
     <v-toolbar-title>Plant Management</v-toolbar-title>
     <v-spacer></v-spacer>

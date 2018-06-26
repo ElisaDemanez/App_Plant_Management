@@ -1,9 +1,9 @@
 
 <template>
 
- <v-card  flat>
+ <v-card class="hidden-sm-and-up" flat>
 
-    <v-bottom-nav :value="true" absolute color="white"  id='navbar' class="hidden-sm-and-up" >
+    <v-bottom-nav :value="true" absolute color="white"  id='navbar' >
       <v-btn flat color="teal" value="Home" :to="{name:'Home'}">
         <span>Home</span>
         <v-icon>home</v-icon>
