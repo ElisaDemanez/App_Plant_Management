@@ -58,7 +58,7 @@ export default {
 
   data() {
     return {
-      searchText: " ",
+      searchText: "",
       selectedOption: null,
       open: false
     };
