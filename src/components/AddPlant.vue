@@ -1,7 +1,7 @@
 <template>
   <div class='ajouter'>
-    <!-- need to to the update for sp. -->
-    <form id="form" @submit='formValidation' method="get">
+    <!--  @submit='formValidation' -->
+    <form id="form" method="get">
       <h2 class="text-xs-left display-3 grey--text text--darken-2"> Add a plant </h2>
 
       <p v-if='errors.length'>
@@ -169,13 +169,16 @@ export default {
     setPlant: function() {
       if (this.existingID == null) {
         //create
+        console.log('create')
         this.increaseID();
         var id = this.aiID;
       } else if (typeof this.existingID == "number") {
         //update
+        console.log('update')
+        
         var id = this.existingID;
       }
-
+console.log('here')
       connection.ref("plants/" + id).set(
         {
           seller: this.selectedSeller,
