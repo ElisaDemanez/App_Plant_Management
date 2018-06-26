@@ -4,7 +4,7 @@
       <v-list two-line>
         <template v-for="(plant, index) in plants">
 
-          <v-list-tile :key="plant.id" avatar ripple @click="{}">
+          <v-list-tile :key="plant.id" avatar ripple  @click="active =plant" @click.stop="dialog = true">
       
             <v-list-tile-content :key="index">
               <v-list-tile-title>
@@ -27,19 +27,21 @@
               </v-list-tile-sub-title>
 
             </v-list-tile-content>
-            <v-list-tile-action>
+            <!-- <v-list-tile-action>
 
               <v-icon @click="updatePlant(plant)" color="teal">update</v-icon>
 
               <v-icon @click="deletePlant(plant.id)" color="deep-orange darken-2">delete</v-icon>
 
-            </v-list-tile-action>
+            </v-list-tile-action> -->
           </v-list-tile>
           <v-divider :key="index" inset></v-divider>
         </template>
 
       </v-list>
 
+     <plantDetailsDialog v-if="dialog" :dialog="dialog"
+      :plant="active" @close="dialog=false"/>
 
   </div>
 
@@ -49,11 +51,19 @@
 /* eslint-disable */
 
 import { connection } from "@/components/firebase.js";
+import plantDetailsDialog from "@/components/utilitaries/plantDetailsDialog";
+
 
 export default {
   name: "Liste",
   data() {
-    return {};
+    return {
+       dialog: false,
+      active :'',
+    };
+  },
+  components : {
+    plantDetailsDialog :plantDetailsDialog
   },
   props: {
     plants: Array,
@@ -63,15 +73,6 @@ export default {
       source: connection.ref("plants"),
       asObject: true
     },
-
-    // s  ellersRef: {
-       // source: connection.ref("sellers"),
-       // asObject: true
-    // }  ,
-    // s  peciesRef: {
-       // source: connection.ref("species"),
-       // asObject: true
-    // }  
   },
   computed: {},
   methods: {
