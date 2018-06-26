@@ -9,16 +9,14 @@ var VueFire = require('vuefire')
 var firebase = require('firebase')
 
 Vue.use(VueFire)
-//  Vue.use(Vuetify)
 import colors from 'vuetify/es5/util/colors'
 
 Vue.use(Vuetify, {
   theme: {
-    primary: colors.teal.base
+    primary: colors.orange.darken4
 
   }
 })
-// explicit installation required in module environments
 
 
 Vue.config.productionTip = false
