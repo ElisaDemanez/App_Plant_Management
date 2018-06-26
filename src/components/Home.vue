@@ -1,47 +1,48 @@
 <template>
-  <div class="liste">
+  <div class="home">
+
     <p> There is <i>{{ totalPlantCount }}</i> corresponding plants </p>
     <v-layout row wrap>
-      <v-flex md6 xs4>
-        <v-btn color="primary" dark @click.stop="additionalFilters = true">Open filter</v-btn>
-      </v-flex>
+      <!-- <v-flex md6 xs4>
+        <v-btn small ripple color="primary" dark @click.stop="additionalFilters = true"> filters <v-icon>arrow_drop_down</v-icon></v-btn>
+      </v-flex> -->
 
-      <v-flex md6 xs8>
+      <v-flex md6 xs12>
         <v-text-field v-model="searchTxt" label="Search on name " placeholder="ex: 'eche prolif' " append-icon="search"></v-text-field>
       </v-flex>
+
+            <v-flex sm6 md5 xs12 offset-md1>
+         <v-select
+         outline  
+          :items="filters"
+          v-model="orderBy"
+          item-text="name"
+          item-value="value"
+          label="Filter by : "
+        ></v-select>
+      </v-flex>
+
     </v-layout>
-    <v-dialog v-model="additionalFilters" max-width="600px" transition="dialog-bottom-transition">
+    <!-- <v-dialog v-model="additionalFilters" max-width="600px" transition="dialog-bottom-transition">
       <v-card>
+     
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
-            <v-flex xs12 md6 >
+  
+           
+        <v-flex xs12 md6 >
               <v-card color="grey lighten-4">
                 <v-card-title primary-title>
-                  Order by ID :
+                 Select a Seller
                 </v-card-title>
-                <v-radio-group v-model="orderBy" class="pt-0">
-                  <v-radio key="IDdesc" value="IDdesc" label="Desc" />
-                  <v-radio key="IDasc" value="IDasc" label="Asc" />
-                </v-radio-group>
-              </v-card>
-            </v-flex>
-             <v-flex xs12 md6 >
-              <v-card color="grey lighten-4">
-                <v-card-title primary-title>
-                 Order by temperature :
-                </v-card-title>
-                <v-radio-group v-model="orderBy" class="pt-0">
-                  <v-radio key="TempDesc" value="TempDesc" label="Desc" />
-                  <v-radio key="TempAsc" value="TempAsc" label="Asc" />
-                </v-radio-group>
-              </v-card>
-            </v-flex>
-        
-            <!-- <v-flex xs12 md6>
-              <v-card>Order by id :
-                <v-radio-group v-model="orderBy" class="pt-0">
-
-                </v-radio-group>
+                    <v-select 
+                    
+                      :items="sellersName"
+                      v-model="sellerFilter"
+                      label="Seller"
+                      single-line
+                    ></v-select>
+              
               </v-card>
             </v-flex>
             <v-flex xs12 md6>
@@ -50,16 +51,17 @@
 
                 </v-radio-group>
               </v-card>
-            </v-flex> -->
+            </v-flex> 
           </v-layout>
         </v-container>
       </v-card>
-    </v-dialog>
-    <v-card>
+    </v-dialog> -->
+    <!-- <v-card> -->
 
+      
       <Liste :plants="plants" />
 
-    </v-card>
+    <!-- </v-card> -->
 
   </div>
 
@@ -77,7 +79,14 @@ export default {
       additionalFilters: false,
       totalPlantCount: 0,
       searchTxt: "",
-      orderBy: ""
+      orderBy: "IDdesc",
+      sellerFilter: "",
+      filters: [
+        { name: "ID Descending", value: "IDdesc" },
+        { name: "ID Ascending", value: "IDasc" },
+        { name: "Temp. Descending", value: "TempDesc" },
+        { name: "Temp. Ascending", value: "TempAsc" }
+      ]
     };
   },
   components: {
@@ -131,6 +140,7 @@ export default {
           let species = self.normlizeText(plant.speciesName);
           let subsp = self.normlizeText(plant.subspName);
           let searchTxt = self.normlizeText(self.searchTxt);
+
           // Filter 1 on name if multiple words
           let arrSearchTxt = searchTxt.split(" ");
           var wordMatch = [];
@@ -139,24 +149,27 @@ export default {
               species.indexOf(element) >= 0 || subsp.indexOf(element) >= 0;
             wordMatch.push(filter1);
           });
+          // filter on sellers
+          var filter2 = true;
+          if (self.sellerFilter !== "") {
+            let searchSeller = self.normlizeText(self.sellerFilter);
+            let seller = self.normlizeText(plant.sellerName);
+            filter2 = seller.indexOf(searchSeller) >= 0;
+          }
 
-          return !wordMatch.includes(false);
+          return !wordMatch.includes(false) && filter2;
         }
       });
-
+      console.log(filtered);
       return filtered;
     },
     plants: function() {
       var plantsArray = [];
       var self = this;
       var plantsObject = this.plantsRef;
-
-      // pagination
       var keys = Object.keys(plantsObject).filter(function(key) {
         return self.filteredPlantsIndexes.includes(key);
       });
-
-      // if search params
 
       this.totalPlantCount = keys.length;
 
@@ -168,17 +181,27 @@ export default {
 
           // else for the last page, it bugs
           if (typeof plantObj !== "undefined" && element !== ".key") {
-            this.completePlantInfos(plantObj);
+            self.completePlantInfos(plantObj);
             plantsArray.push(plantObj);
           }
         }
       }
-      if (this.searchTxt || this.orderBy) {
-        this.sortbyId(plantsArray);
+      if (self.orderBy) {
+        self.sortbyId(plantsArray);
         // this.activePage = 1;
       }
-      console.log(plantsArray);
       return plantsArray;
+    },
+    sellersName: function() {
+      var temp = [];
+      var self = this;
+      for (const key in self.sellersRef) {
+        if (self.sellersRef.hasOwnProperty(key)) {
+          const element = self.sellersRef[key];
+          if (typeof element.name !== "undefined") temp.push(element.name);
+        }
+      }
+      return temp;
     }
   },
   methods: {
