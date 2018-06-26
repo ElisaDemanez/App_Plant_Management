@@ -1,6 +1,7 @@
 
 <template>
   <div class='ajouter'>
+     <h2 class="text-xs-left display-3 grey--text text--darken-2"> New subspecies </h2>
       <p v-if='errors.length'>
           <ul>
             <li v-for='error in errors' :key="error.id">{{ error }}</li>
@@ -37,10 +38,8 @@
         
         </v-container>
 
-         <v-btn color='primary'
-         @click='formValidation'> submit
-        </v-btn>
-        <v-btn flat value="Home" :to="{name:'Home'}" >cancel</v-btn>
+         <submitButtons @form-validation="formValidation"/>
+
     </v-form>
 
   </div>
@@ -49,14 +48,17 @@
 <script>
 /* eslint-disable */
 
-import { connection, plants, sellers } from "@/components/firebase.js";
+import { connection} from "@/components/firebase.js";
 import AutocompleteDropdown from "@/components/utilitaries/AutocompleteDropdown.vue";
+import submitButtons from "@/components/utilitaries/submitButtons";
+
 
 export default {
   name: "AddSubspecies",
 
   components: {
-    AutocompleteDropdown
+    AutocompleteDropdown,
+    submitButtons
   },
 
   data() {
@@ -86,7 +88,6 @@ export default {
     }
   },
 
-  computed: {},
   methods: {
     formValidation: function(e) {
       if (this.selectedSpecies == null) {
