@@ -4,7 +4,7 @@
 <NavigationTop />
   <v-container class ="body-container" d-flex  color="purple">
       <v-layout row wrap>
-        <v-flex xs12 sm8 md8 lg6 xl4 offset-sm1 offset-md2 offset-lg3  >
+        <v-flex xs12 sm10 md8 lg8 xl4 offset-sm1 offset-md2 offset-lg2  >
           <router-view/>
         </v-flex>
       </v-layout>

@@ -3,10 +3,7 @@
 
     <p> There is <i>{{ totalPlantCount }}</i> corresponding plants </p>
     <v-layout row wrap>
-      <!-- <v-flex md6 xs4>
-        <v-btn small ripple color="primary" dark @click.stop="additionalFilters = true"> filters <v-icon>arrow_drop_down</v-icon></v-btn>
-      </v-flex> -->
-
+ 
       <v-flex md6 xs12>
         <v-text-field v-model="searchTxt" label="Search on name " placeholder="ex: 'eche prolif' " append-icon="search"></v-text-field>
       </v-flex>
@@ -23,45 +20,9 @@
       </v-flex>
 
     </v-layout>
-    <!-- <v-dialog v-model="additionalFilters" max-width="600px" transition="dialog-bottom-transition">
-      <v-card>
-     
-        <v-container fluid grid-list-sm>
-          <v-layout row wrap>
-  
-           
-        <v-flex xs12 md6 >
-              <v-card color="grey lighten-4">
-                <v-card-title primary-title>
-                 Select a Seller
-                </v-card-title>
-                    <v-select 
-                    
-                      :items="sellersName"
-                      v-model="sellerFilter"
-                      label="Seller"
-                      single-line
-                    ></v-select>
-              
-              </v-card>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-card>Order by id :
-                <v-radio-group v-model="orderBy" class="pt-0">
+ 
 
-                </v-radio-group>
-              </v-card>
-            </v-flex> 
-          </v-layout>
-        </v-container>
-      </v-card>
-    </v-dialog> -->
-    <!-- <v-card> -->
-
-      
       <Liste :plants="plants" />
-
-    <!-- </v-card> -->
 
   </div>
 
@@ -71,6 +32,8 @@
 
 import { connection } from "@/components/firebase.js";
 import Liste from "@/components/Liste";
+import plantDetailsDialog from "@/components/utilitaries/plantDetailsDialog";
+
 
 export default {
   name: "Home",
@@ -86,11 +49,13 @@ export default {
         { name: "ID Ascending", value: "IDasc" },
         { name: "Temp. Descending", value: "TempDesc" },
         { name: "Temp. Ascending", value: "TempAsc" }
-      ]
+      ],
+     
     };
   },
   components: {
-    Liste: Liste
+    Liste, 
+    plantDetailsDialog
   },
   firebase: {
     db: connection.ref(),
@@ -140,7 +105,6 @@ export default {
           let species = self.normlizeText(plant.speciesName);
           let subsp = self.normlizeText(plant.subspName);
           let id = plant.id.toString();
-          console.log(id)
           let searchTxt = self.normlizeText(self.searchTxt);
 
           // Filter 1 on name if multiple words
@@ -148,7 +112,9 @@ export default {
           var wordMatch = [];
           arrSearchTxt.forEach(element => {
             let filter1 =
-              species.indexOf(element) >= 0 || subsp.indexOf(element) >= 0 || id.indexOf(element) >= 0;
+              species.indexOf(element) >= 0 ||
+              subsp.indexOf(element) >= 0 ||
+              id.indexOf(element) >= 0;
             wordMatch.push(filter1);
           });
           // filter on sellers
@@ -162,7 +128,6 @@ export default {
           return !wordMatch.includes(false) && filter2;
         }
       });
-      console.log(filtered);
       return filtered;
     },
     plants: function() {
