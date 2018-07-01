@@ -2,43 +2,39 @@
     <div class="liste">
         <v-container fluid grid-list-sm>
             <v-layout row wrap>
-
                 <template v-for="(plant) in plants">
                     <v-flex xs12 md6 :key="plant.id" @click="active=plant" @click.stop="dialog= true">
-                        <v-card :key="plant.id" avatar ripple >
-                                 <v-card-title primary-title>
-                                   <div class="body-2 font-size-bigger">
-                                        #{{plant.id}}:
-                                        <strong v-if="plant.speciesName" class="hidden-sm-and-down" v-html="plant.speciesName+ '&nbsp;'"> 
-                                        </strong>
-                                        <strong v-if="plant.speciesName" class="hidden-sm-and-up" v-html="plant.speciesName.slice(0, 4) + '. &nbsp;'"> 
-                                        </strong>
-                                        <span class="subheading">
-                                         {{plant.subspName}}
-                                         </span>
-                                         </div>
-                                    </v-card-title>
-                                    <v-card-text>
-                                        <v-layout row justify-space-between>
-                                            <v-flex xs8 class="text-xs-left">
-                                               {{plant.exposure}}
-                                            </v-flex>
-                                            <v-flex xs4 class="text-xs-left">
-                                              {{plant.temperature}}°
-                                            </v-flex>
-                                        </v-layout>
-                                    </v-card-text>
-                           
+                        <v-card :key="plant.id" avatar ripple>
+                            <v-card-media v-if="plant.imgURL" :src="plant.imgURL" height="200px"> </v-card-media>
+                            <div v-else style="height:200px !important;
+                            " class="grey lighten-3"></div>
+                            <v-card-title primary-title>
+                                <div class="body-2 font-size-bigger">
+                                    #{{plant.id}}:
+                                    <strong v-if="plant.speciesName" class="hidden-sm-and-down" v-html="plant.speciesName">
+                                    </strong>
+                                    <strong v-if="plant.speciesName" class="hidden-sm-and-up" v-html="plant.speciesName.slice(0, 4) + '.&nbsp;'">
+                                    </strong>
+                                    <span class="subheading">{{plant.subspName}}</span>
+                                </div>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-layout row justify-space-between>
+                                    <v-flex xs8 class="text-xs-left">
+                                        {{plant.exposure}}
+                                    </v-flex>
+                                    <v-flex xs4 class="text-xs-left">
+                                        {{plant.temperature}}°
+                                    </v-flex>
+                                </v-layout>
+                            </v-card-text>
                         </v-card>
                     </v-flex>
                 </template>
-                
             </v-layout>
         </v-container>
         <plantDetailsDialog v-if="dialog" :dialog="dialog" :plant="active" @close="dialog = false" />
-
     </div>
-
 </template>
 
 <script>
