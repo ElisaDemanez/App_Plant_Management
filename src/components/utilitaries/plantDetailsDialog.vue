@@ -1,9 +1,9 @@
 <template>
     <div class='details'>
-        <v-dialog lazy v-model="dialog" max-width="500px" >
+        <v-dialog lazy v-model="dialog" max-width="500px">
             <v-card class="text-xs-left">
-                <!-- <v-card-media src="/static/doc-images/cards/desert.jpg" height="200px">
-        </v-card-media> -->
+                <v-card-media v-if="plant.imgURL" :src="plant.imgURL" height="200px">
+                </v-card-media>
                 <v-card-title primary-title>
                     <h3 class="headline mb-0">
                         <span> #{{plant.id}}: </span>
@@ -13,29 +13,31 @@
                     </h3>
 
                 </v-card-title>
+
+
                 <v-card-text>
-                  <h4 class="primary--text" >Infos</h4>
+                    <h4 class="primary--text">Infos</h4>
                     <p class="grey--text text--darken-3 subheading mb-1">Seller : {{plant.sellerName}}</p>
 
                     <p class="grey--text text--darken-3 subheading">Exposure : {{plant.exposure}}</p>
-                  <h4 class="primary--text mb-1" >Détails</h4>
-                    <p> {{plantDescription}}</p>
-                  </v-card-text>
+                    <h4 class="primary--text mb-1" v:if="plant.description">Détails</h4>
+                    <p> {{plant.description}}</p>
+                </v-card-text>
 
                 <v-card-actions>
                     <v-btn color="primary" flat @click.stop="dialog=false">Close</v-btn>
-                       <v-spacer></v-spacer>
-                  <v-btn @click="updatePlant(plant)" icon>
-                    <v-icon color="primary">update</v-icon>
-                  </v-btn>
-                   <v-btn @click="deletePlant(plant.id)" icon>
-                     <v-icon color="deep-orange darken-2">delete</v-icon>
-                  </v-btn>
-            
+                    <v-spacer></v-spacer>
+                    <v-btn @click="updatePlant(plant)" icon>
+                        <v-icon color="primary">update</v-icon>
+                    </v-btn>
+                    <v-btn @click="deletePlant(plant.id)" icon>
+                        <v-icon color="deep-orange darken-2">delete</v-icon>
+                    </v-btn>
+
                 </v-card-actions>
 
             </v-card>
-         
+
         </v-dialog>
 
     </div>
