@@ -6,7 +6,7 @@
     <v-bottom-nav :value="true" absolute color="white"  id='navbar' >
       <v-btn flat color="primary" value="showPlant" :to="{name:'showPlant'}">
         <span>Home</span>
-        <v-icon>Home</v-icon>
+        <v-icon>home</v-icon>
       </v-btn>
       <v-btn flat color="primary" value="Ajouter" :to="{name:'Ajouter'}">
         <span>Add a plant</span>
