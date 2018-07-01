@@ -3,7 +3,7 @@
       <template>
   <div class='submit'>
    <v-container>
-        <v-btn @click="$emit('form-validation')" color='primary' type='submit' value='Submit' >Submit </v-btn>
+        <v-btn @click="$emit('form-validation')" color='primary'  value='Submit' >Submit </v-btn>
         <v-spacer></v-spacer>
       </v-container>
 
