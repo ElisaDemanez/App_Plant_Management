@@ -1,6 +1,5 @@
 <template>
     <div class='details'>
-      {{dialog}}
         <v-dialog lazy v-model="dialog" max-width="500px" >
             <v-card class="text-xs-left">
                 <!-- <v-card-media src="/static/doc-images/cards/desert.jpg" height="200px">
@@ -100,7 +99,6 @@ export default {
   },
   watch: {
     dialog: function() {
-      console.log('here')
       if (!this.dialog) this.$emit("close");
     }
   }

@@ -2,7 +2,6 @@
     <div class="liste">
         <v-container fluid grid-list-sm>
             <v-layout row wrap>
-{{dialog}}
 
                 <template v-for="(plant) in plants">
                     <v-flex xs12 md6 :key="plant.id" @click="active=plant" @click.stop="dialog= true">
