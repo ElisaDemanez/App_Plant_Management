@@ -8,5 +8,3 @@ export const app = initializeApp({
 })
 
 export const connection = app.database()
-export const plants = connection.ref('plants');
-export const sellers = connection.ref('sellers');
