@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="showPlant">
 
     <p> There is <i>{{ totalPlantCount }}</i> corresponding plants </p>
     <v-layout row wrap>
@@ -36,7 +36,7 @@ import plantDetailsDialog from "@/components/utilitaries/plantDetailsDialog";
 
 
 export default {
-  name: "Home",
+  name: "showPlant",
   data() {
     return {
       additionalFilters: false,

@@ -4,9 +4,9 @@
  <v-card class="hidden-sm-and-up" flat>
 
     <v-bottom-nav :value="true" absolute color="white"  id='navbar' >
-      <v-btn flat color="primary" value="Home" :to="{name:'Home'}">
+      <v-btn flat color="primary" value="showPlant" :to="{name:'showPlant'}">
         <span>Home</span>
-        <v-icon>home</v-icon>
+        <v-icon>Home</v-icon>
       </v-btn>
       <v-btn flat color="primary" value="Ajouter" :to="{name:'Ajouter'}">
         <span>Add a plant</span>

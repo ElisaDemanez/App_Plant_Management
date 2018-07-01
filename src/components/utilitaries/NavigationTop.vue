@@ -9,7 +9,7 @@
     <v-toolbar-title>Plant Management</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items >
-        <v-btn flat color="primary" value="Home" :to="{name:'Home'}">
+        <v-btn flat color="primary" value="showPlant" :to="{name:'showPlant'}">
         <span>Home</span>
       </v-btn>
       <v-btn flat color="primary" value="Ajouter" :to="{name:'Ajouter'}">

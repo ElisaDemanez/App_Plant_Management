@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
+import showPlant from '@/components/showPlant'
 import Ajouter from '@/components/AddPlant'
 import AjouterObjet from '@/components/AddObject'
 import AddSubspecies from '@/components/AddSubspecies'
@@ -12,8 +12,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: Home
+      name: 'showPlant',
+      component: showPlant
     },
     {
       path: '/add',

@@ -8,7 +8,7 @@
       </v-container>
 
       <v-container>
-        <router-link :to="{name: 'Home'}" class="right">
+        <router-link :to="{name: 'showPlant'}" class="right">
           <v-btn flat small>Cancel</v-btn>
         </router-link>
       </v-container>
