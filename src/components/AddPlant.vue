@@ -175,26 +175,31 @@ export default {
             imgURL = url;
           })
           .then(function() {
-            console.log(self.selectedSpecies)
-            connection.ref("plants/" + id).set(
-              {
-                seller: self.selectedSeller,
-                species: self.selectedSpecies,
-                subsp: self.selectedSubspecies,
-                imgURL: imgURL ? imgURL : null,
-                description: self.description ? self.description : null,
-                id: id
-              },
-              function(error) {
-                if (error) {
-                  console.log("error", error);
-                } else {
-                  console.log("successfull");
-                }
-              }
-            );
+            self.pushPlant(id, imgURL);
           });
+      } else {
+        self.pushPlant(id);
       }
+    },
+    pushPlant: function(id, imgURL = null) {
+      const self = this;
+      connection.ref("plants/" + id).set(
+        {
+          seller: self.selectedSeller,
+          species: self.selectedSpecies,
+          subsp: self.selectedSubspecies,
+          imgURL: imgURL ? imgURL : null,
+          description: self.description ? self.description : null,
+          id: id
+        },
+        function(error) {
+          if (error) {
+            console.log("error", error);
+          } else {
+            console.log("successfull");
+          }
+        }
+      );
     },
     increaseID: function() {
       this.aiID = parseInt(this.db[0].count) + 1;
