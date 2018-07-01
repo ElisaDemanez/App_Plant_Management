@@ -1,7 +1,7 @@
 <template>
   <div class='ajouter'>
     <!--  @submit='formValidation' -->
-    <form id="form" method="get">
+    <div id="form"  >
       <h2 class="text-xs-left display-3 grey--text text--darken-2"> Add a plant </h2>
 
       <p v-if='errors.length'>
@@ -53,10 +53,16 @@
        
        <input type="file" id="photo" accept="image/*" ref="imgInput" @change="processImage">
       <img :src="imgURL"  height="200">
-       
+       <!-- loader -->
+               <div class="text-xs-center"  > 
+                  <v-progress-circular  
+      indeterminate v-if="loading"
+      color="primary"
+    ></v-progress-circular>
+               </div>
        <submitButtons @form-validation="formValidation"/>
        
-    </form>
+    </div>
   </div>
 </template>
 
@@ -82,6 +88,7 @@ export default {
       description: "",
       imgURL: "",
       image: null,
+      loading: false,
       descriptionRules: [
         v => (v && v.length <= 150) || "Must be less than 150 characters"
       ],
@@ -146,8 +153,8 @@ export default {
         this.errors.push("Please select a species in the list");
 
       if (!this.errors.length) {
+        this.loading = true;
         this.setPlant();
-        this.$router.push("/");
       } else {
         return;
       }
@@ -197,6 +204,8 @@ export default {
             console.log("error", error);
           } else {
             console.log("successfull");
+            self.loading = false;
+            self.$router.push("/");
           }
         }
       );
