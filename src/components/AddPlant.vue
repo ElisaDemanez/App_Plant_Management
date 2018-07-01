@@ -47,22 +47,25 @@
       </v-layout>
      
 <!-- offset-sm1 offset-md2 offset-lg3 -->
-
+    <label for="photo"></label>
 
       <v-text-field id='description' v-model='description' label='Additional infos' />
+       
+       <input type="file" id="photo" accept="image/*" ref="imgInput" @change="processImage">
+      <img :src="imgURL"  height="200">
+       
        <submitButtons @form-validation="formValidation"/>
-
-
+       
     </form>
   </div>
 </template>
 
 <script>
+// huge thanks to https://www.youtube.com/watch?v=J2Wp4_XRsWc
 /* eslint-disable */
-import { connection, plants, sellers } from "@/components/firebase.js";
+import { connection, app } from "@/components/firebase.js";
 import AutocompleteDropdown from "@/components/utilitaries/AutocompleteDropdown.vue";
 import submitButtons from "@/components/utilitaries/submitButtons";
-
 
 export default {
   name: "Ajouter",
@@ -70,7 +73,6 @@ export default {
   components: {
     AutocompleteDropdown,
     submitButtons
-    
   },
 
   data() {
@@ -78,6 +80,8 @@ export default {
       errors: [],
       aiID: "",
       description: "",
+      imgURL: "",
+      image: null,
       descriptionRules: [
         v => (v && v.length <= 150) || "Must be less than 150 characters"
       ],
@@ -134,20 +138,62 @@ export default {
   methods: {
     formValidation: function(e) {
       this.errors = [];
-
       if (!this.checkAutocomplete("autocompleteSeller", this.sellersRef))
         this.errors.push("Please select a seller in the list");
-
       if (!this.checkAutocomplete("autocompleteSpecies", this.speciesRef))
         this.errors.push("Please select a species in the list");
-
       if (!this.checkAutocomplete("autocompleteSubspecies", this.subspeciesRef))
         this.errors.push("Please select a species in the list");
-      else if (!this.errors.length) {
-        this.setPlant();
 
+      if (!this.errors.length) {
+        this.setPlant();
         this.$router.push("/");
-        // .database().ref().child('posts').push().key;
+      } else {
+        return;
+      }
+    },
+    setPlant: function() {
+      const self = this;
+      if (this.existingID == null) {
+        //create
+        this.increaseID();
+        var id = this.aiID;
+      } else if (typeof this.existingID == "number") {
+        //update
+        var id = this.existingID;
+      }
+      var imgURL;
+
+      if (this.image) {
+        var storedIMG = app.storage().ref(id + "/Firstimg");
+        storedIMG
+          .put(this.image)
+          .then(function() {
+            return storedIMG.getDownloadURL();
+          })
+          .then(function(url) {
+            imgURL = url;
+          })
+          .then(function() {
+            console.log(self.selectedSpecies)
+            connection.ref("plants/" + id).set(
+              {
+                seller: self.selectedSeller,
+                species: self.selectedSpecies,
+                subsp: self.selectedSubspecies,
+                imgURL: imgURL ? imgURL : null,
+                description: self.description ? self.description : null,
+                id: id
+              },
+              function(error) {
+                if (error) {
+                  console.log("error", error);
+                } else {
+                  console.log("successfull");
+                }
+              }
+            );
+          });
       }
     },
     increaseID: function() {
@@ -166,35 +212,17 @@ export default {
       }
       return isInArray;
     },
-    setPlant: function() {
-      if (this.existingID == null) {
-        //create
-        console.log('create')
-        this.increaseID();
-        var id = this.aiID;
-      } else if (typeof this.existingID == "number") {
-        //update
-        console.log('update')
-        
-        var id = this.existingID;
+    processImage: function() {
+      if (this.$refs.imgInput.files) {
+        const firstimg = this.$refs.imgInput.files[0];
+        let filename = this.$refs.imgInput.files[0].name;
+        const fileReader = new FileReader();
+        fileReader.addEventListener("load", () => {
+          this.imgURL = fileReader.result;
+        });
+        fileReader.readAsDataURL(firstimg);
+        this.image = firstimg;
       }
-console.log('here')
-      connection.ref("plants/" + id).set(
-        {
-          seller: this.selectedSeller,
-          species: this.selectedSpecies,
-          subsp: this.selectedSubspecies,
-          description: this.description ? this.description : null,
-          id: id
-        },
-        function(error) {
-          if (error) {
-            console.log("error", error);
-          } else {
-            console.log("successfull");
-          }
-        }
-      );
     }
   }
 };
