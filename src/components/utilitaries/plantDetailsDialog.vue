@@ -1,6 +1,7 @@
 <template>
     <div class='details'>
-        <v-dialog lazy v-model="dialog" max-width="500px">
+      {{dialog}}
+        <v-dialog lazy v-model="dialog" max-width="500px" >
             <v-card class="text-xs-left">
                 <!-- <v-card-media src="/static/doc-images/cards/desert.jpg" height="200px">
         </v-card-media> -->
@@ -73,22 +74,21 @@ export default {
       return this.user.description;
     }
   },
- methods: {
+  methods: {
     deletePlant: function(id) {
-      console.log('aa')
-      
+      console.log("aa");
+
       // // Known bug : unexplained : On computer, with mobiel display : confirm is not fired and always fake
       var oui = confirm(
         "Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk "
       );
       if (oui) {
         this.$firebaseRefs.plantsRef.child(id).remove();
-      this.dialog = false
-      $emit('close')
+        this.dialog = false;
+        $emit("close");
       }
     },
     updatePlant: function(plant) {
-      console.log('yo')
       this.$router.push({
         name: "Ajouter",
         params: {
@@ -96,6 +96,12 @@ export default {
           plantToUpdate: plant
         }
       });
+    }
+  },
+  watch: {
+    dialog: function() {
+      console.log('here')
+      if (!this.dialog) this.$emit("close");
     }
   }
 };
