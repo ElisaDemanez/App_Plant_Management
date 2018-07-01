@@ -1,71 +1,50 @@
 <template>
-  <div class='ajouter'>
-    <!--  @submit='formValidation' -->
-    <div id="form"  >
-      <h2 class="text-xs-left display-3 grey--text text--darken-2"> Add a plant </h2>
+    <div class='ajouter'>
+        <!--  @submit='formValidation' -->
+        <div id="form">
+            <h2 class="text-xs-left display-3 grey--text text--darken-2"> Add a plant </h2>
+            <p v-if='errors.length'>
+                <b>Please correct the following error(s):</b>
+                <ul>
+                    <li v-for='error in errors' :key="error.id">{{ error }}</li>
+                </ul>
+            </p>
+            <p v-if="existingID"> Modifier la plante n° {{existingID}}</p>
+            <v-layout wrap>
+                <v-flex xs12 sm8 md6 lg6 xl4>
+                    <AutocompleteDropdown customId="Species" v-model="selectedSpecies" :prefilledValue="speciesIDToUpdate" :prefilledText="speciesNameToUpdate"
+                        :UnfilteredData="speciesRef" :linkAdd="'AjouterMisc'" :linkAddParams="'species'" />
+                </v-flex>
 
-      <p v-if='errors.length'>
-        <b>Please correct the following error(s):</b>
-        <ul>
-          <li v-for='error in errors' :key="error.id">{{ error }}</li>
-        </ul>
-      </p>
-      <p v-if="existingID"> Modifier la plante n° {{existingID}}</p>
+                <v-flex xs12 sm8 md6 lg6 xl4>
 
-       <v-layout  wrap>
-        <v-flex xs12 sm8 md6 lg6 xl4  >
-          <AutocompleteDropdown customId="Species"
-          v-model="selectedSpecies" 
-          :prefilledValue="speciesIDToUpdate" 
-          :prefilledText="speciesNameToUpdate"
-          :UnfilteredData="speciesRef" 
-          :linkAdd="'AjouterMisc'" 
-          :linkAddParams="'species'" />
-        </v-flex>
+                    <AutocompleteDropdown v-if="this.selectedSpecies !== null || typeof this.$route.params.plantToUpdate !=='undefined'" customId="Subspecies"
+                        v-model="selectedSubspecies" :prefilledValue="subspeciesIDToUpdate" :prefilledText="subspeciesNameToUpdate"
+                        :UnfilteredData="subspeciesRef" :linkAdd="'AjouterSousespèce'" />
+                </v-flex>
 
-    
-        <v-flex xs12 sm8 md6 lg6 xl4   >
+                <v-flex xs12 sm8 md6 lg6 xl4>
+                    <AutocompleteDropdown customId="Seller" v-model="selectedSeller" :prefilledValue="sellerIDToUpdate" :prefilledText="sellerNameToUpdate"
+                        :UnfilteredData="sellersRef" :linkAdd="'AjouterMisc'" :linkAddParams="'sellers'" />
+                </v-flex>
+            </v-layout>
 
-        <AutocompleteDropdown v-if="this.selectedSpecies !== null || typeof this.$route.params.plantToUpdate !=='undefined'" 
-        customId="Subspecies"
-        v-model="selectedSubspecies" 
-        :prefilledValue="subspeciesIDToUpdate" 
-        :prefilledText="subspeciesNameToUpdate" 
-        :UnfilteredData="subspeciesRef"
-        :linkAdd="'AjouterSousespèce'" />
-        </v-flex>
+            <!-- offset-sm1 offset-md2 offset-lg3 -->
+            <v-text-field id='description' v-model='description' label='Additional infos' />
 
-            <v-flex xs12 sm8 md6 lg6 xl4   >
-          <AutocompleteDropdown customId="Seller" 
-          v-model="selectedSeller" 
-          :prefilledValue="sellerIDToUpdate" 
-          :prefilledText="sellerNameToUpdate"
-          :UnfilteredData="sellersRef" 
-          :linkAdd="'AjouterMisc'" 
-          :linkAddParams="'sellers'" />
-        </v-flex>
-      </v-layout>
-     
-<!-- offset-sm1 offset-md2 offset-lg3 -->
-    <label for="photo"></label>
+            <label for="photo"></label>
+            <input type="file" id="photo" accept="image/*" ref="imgInput" @change="processImage" multiple>
+            <!-- multiple -->
+            <img :src="imgURL" height="200">
+            <div class="text-xs-center">
+                <v-progress-circular indeterminate v-if="loading" color="primary"></v-progress-circular>
+            </div>
 
-      <v-text-field id='description' v-model='description' label='Additional infos' />
-       
-       <input type="file" id="photo" accept="image/*" ref="imgInput" @change="processImage">
-      <img :src="imgURL"  height="200">
-       <!-- loader -->
-               <div class="text-xs-center"  > 
-                  <v-progress-circular  
-      indeterminate v-if="loading"
-      color="primary"
-    ></v-progress-circular>
-               </div>
-       <submitButtons @form-validation="formValidation"/>
-       
+            <submitButtons @form-validation="formValidation" />
+
+        </div>
     </div>
-  </div>
 </template>
-
 <script>
 // huge thanks to https://www.youtube.com/watch?v=J2Wp4_XRsWc
 /* eslint-disable */
@@ -172,7 +151,7 @@ export default {
       var imgURL;
 
       if (this.image) {
-        var storedIMG = app.storage().ref(id + "/Firstimg");
+        var storedIMG = app.storage().ref(id + "/"+ this.image.name);
         storedIMG
           .put(this.image)
           .then(function() {
@@ -251,3 +230,4 @@ export default {
   max-width: 150px !important;
 }
 </style>
+multiple
