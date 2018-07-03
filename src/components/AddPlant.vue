@@ -1,6 +1,5 @@
 <template>
     <div class='ajouter'>
-        <!--  @submit='formValidation' -->
         <div id="form">
             <h2 class="text-xs-left display-3 grey--text text--darken-2"> Add a plant </h2>
             <p v-if='errors.length'>
@@ -29,13 +28,15 @@
                 </v-flex>
             </v-layout>
 
-            <!-- offset-sm1 offset-md2 offset-lg3 -->
             <v-text-field id='description' v-model='description' label='Additional infos' />
 
             <label for="photo"></label>
-            <input type="file" id="photo" accept="image/*" ref="imgInput" @change="processImage" multiple>
-            <!-- multiple -->
-            <img :src="imgURL" height="200">
+            <input type="file" id="photo" accept="image/*" ref="imgInput" multiple @change="processImage">
+            <v-container fluid grid-list-sm>
+            <v-layout row wrap>
+            <!-- problem, only loading on first upload. loop is not redoing itself-->
+            <ImagePreview v-for="(file, index) in images" :file="file" v-if="file" v-bind:key="index" />
+            </v-layout></v-container>
             <div class="text-xs-center">
                 <v-progress-circular indeterminate v-if="loading" color="primary"></v-progress-circular>
             </div>
@@ -51,13 +52,15 @@
 import { connection, app } from "@/components/firebase.js";
 import AutocompleteDropdown from "@/components/utilitaries/AutocompleteDropdown.vue";
 import submitButtons from "@/components/utilitaries/submitButtons";
+import ImagePreview from "@/components/utilitaries/ImagePreview";
 
 export default {
   name: "Ajouter",
 
   components: {
     AutocompleteDropdown,
-    submitButtons
+    submitButtons,
+    ImagePreview
   },
 
   data() {
@@ -65,8 +68,7 @@ export default {
       errors: [],
       aiID: "",
       description: "",
-      imgURL: "",
-      image: null,
+      images: null,
       loading: false,
       descriptionRules: [
         v => (v && v.length <= 150) || "Must be less than 150 characters"
@@ -148,24 +150,42 @@ export default {
         //update
         var id = this.existingID;
       }
-      var imgURL;
-
-      if (this.image) {
-        var storedIMG = app.storage().ref(id + "/"+ this.image.name);
-        storedIMG
-          .put(this.image)
-          .then(function() {
-            return storedIMG.getDownloadURL();
-          })
-          .then(function(url) {
-            imgURL = url;
-          })
-          .then(function() {
-            self.pushPlant(id, imgURL);
-          });
-      } else {
-        self.pushPlant(id);
+      //push images
+      if (this.images) {
+        function storeimg(image) {
+          var storedIMG = app.storage().ref(id + "/" + image.name);
+          console.log("function");
+          storedIMG
+            .put(image)
+            .then(function() {
+              return storedIMG.getDownloadURL();
+            })
+            .then(function(urli) {
+              console.log("lastpromise");
+              connection.ref("plants/" + id + "/images/").push(
+                {
+                  name: image.name,
+                  url: urli
+                },
+                function(error) {
+                  if (error) {
+                    console.log("error", error);
+                  } else {
+                    console.log("successfull");
+                  }
+                }
+              );
+            });
+          console.log("endfunction");
+        }
+        for (const key in self.images) {
+          var reg = /^[0-9]+$/;
+          if (reg.test(key)) storeimg(self.images[key]);
+        }
+        console.log("ici");
       }
+      console.log("là");
+      self.pushPlant(id);
     },
     pushPlant: function(id, imgURL = null) {
       const self = this;
@@ -206,16 +226,7 @@ export default {
       return isInArray;
     },
     processImage: function() {
-      if (this.$refs.imgInput.files) {
-        const firstimg = this.$refs.imgInput.files[0];
-        let filename = this.$refs.imgInput.files[0].name;
-        const fileReader = new FileReader();
-        fileReader.addEventListener("load", () => {
-          this.imgURL = fileReader.result;
-        });
-        fileReader.readAsDataURL(firstimg);
-        this.image = firstimg;
-      }
+      this.images = this.$refs.imgInput.files;
     }
   }
 };
@@ -230,4 +241,3 @@ export default {
   max-width: 150px !important;
 }
 </style>
-multiple
