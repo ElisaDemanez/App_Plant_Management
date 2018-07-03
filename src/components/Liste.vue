@@ -1,5 +1,6 @@
 <template>
     <div class="liste">
+
         <v-container fluid grid-list-sm>
             <v-layout row wrap>
                 <template v-for="(plant) in plants">
@@ -29,7 +30,7 @@
                                     </v-card-text>
                                 </v-flex>
                                 <v-flex xs4>
-                                    <v-card-media v-if="plant.imgURL" :src="plant.imgURL" height="100%">
+                                    <v-card-media v-if="plant.images" :src="plant.images[Object.keys(plant.images)[0]].url" height="100%">
                                     </v-card-media>
                                     <div v-else style="height:100% !important;
                             " class="grey lighten-3"></div>

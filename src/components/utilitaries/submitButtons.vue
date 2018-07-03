@@ -1,6 +1,4 @@
- 
-
-      <template>
+<template>
   <div class='submit'>
    <v-container>
         <v-btn @click="$emit('form-validation')" color='primary'  value='Submit' >Submit </v-btn>

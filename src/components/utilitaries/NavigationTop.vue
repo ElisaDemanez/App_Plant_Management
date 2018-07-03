@@ -1,9 +1,6 @@
 
-
 <template>
 
-
- 
    <v-toolbar class="hidden-xs-only navbar">
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon>   -->
     <v-toolbar-title>Plant Management</v-toolbar-title>
