@@ -18,9 +18,9 @@
           label="Filter by : "
         ></v-select>
       </v-flex>
+      
 
     </v-layout>
- 
 
       <Liste :plants="plants" />
 
@@ -31,8 +31,7 @@
 /* eslint-disable */
 
 import { connection } from "@/components/firebase.js";
-import Liste from "@/components/Liste";
-import plantDetailsDialog from "@/components/utilitaries/plantDetailsDialog";
+import Liste from "@/components/Plants/Read/Liste";
 
 
 export default {
@@ -50,12 +49,12 @@ export default {
         { name: "Temp. Descending", value: "TempDesc" },
         { name: "Temp. Ascending", value: "TempAsc" }
       ],
-     
+
     };
   },
   components: {
     Liste, 
-    plantDetailsDialog
+    
   },
   firebase: {
     db: connection.ref(),
@@ -172,6 +171,7 @@ export default {
     }
   },
   methods: {
+    
     completePlantInfos: function(plantObj) {
       plantObj["speciesName"] = this.speciesRef[plantObj.species].name;
       plantObj["sellerName"] = this.sellersRef[plantObj.seller].name;

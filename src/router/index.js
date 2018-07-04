@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import showPlant from '@/components/showPlant'
-import Ajouter from '@/components/AddPlant'
+import showPlant from '@/components/Plants/Read/Main.vue'
+import Ajouter from '@/components/Plants/Create/main.vue'
 import AjouterObjet from '@/components/AddObject'
 import AddSubspecies from '@/components/AddSubspecies'
 

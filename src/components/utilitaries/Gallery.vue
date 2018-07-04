@@ -26,18 +26,18 @@ export default {
   },
 
   methods: {
-    loadPicture(file) {
+    // loadPicture(file) {
       //   let self = this;
       //   var reader = new FileReader();
       //   reader.onload = function(e) {
       //     self.src = e.target.result;
       //   };
       //   reader.readAsDataURL(file);
-    }
+    // }
   },
-  mounted() {
+  // mounted() {
     // this.loadPicture(this.file);
-  }
+  // }
 };
 </script>
 

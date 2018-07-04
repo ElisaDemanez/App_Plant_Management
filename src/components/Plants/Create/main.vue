@@ -55,7 +55,8 @@
 import { connection, app } from "@/components/firebase.js";
 import AutocompleteDropdown from "@/components/utilitaries/AutocompleteDropdown.vue";
 import submitButtons from "@/components/utilitaries/submitButtons";
-import ImagePreview from "@/components/utilitaries/ImagePreview";
+import ImagePreview from "@/components/Plants/Create/ImagePreview";
+import setPlant from "@/components/Plants/Create/createUpdate.js";
 
 export default {
   name: "Ajouter",
@@ -138,76 +139,12 @@ export default {
 
       if (!this.errors.length) {
         this.loading = true;
-        this.setPlant();
+        setPlant(this);
       } else {
         return;
       }
     },
-    setPlant: function() {
-      const self = this;
-      if (this.existingID == null) {
-        //create
-        this.increaseID();
-        var id = this.aiID;
-      } else if (typeof this.existingID == "number") {
-        //update
-        var id = this.existingID;
-      }
-      //push images
-      if (this.images) {
-        function storeimg(image) {
-          var storedIMG = app.storage().ref(id + "/" + image.name);
-          storedIMG
-            .put(image)
-            .then(function() {
-              return storedIMG.getDownloadURL();
-            })
-            .then(function(urli) {
-              connection.ref("plants/" + id + "/images/").push(
-                {
-                  name: image.name,
-                  url: urli
-                },
-                function(error) {
-                  if (error) {
-                    console.log("error", error);
-                  } else {
-                    console.log("successfull");
-                  }
-                }
-              );
-            });
-          console.log("endfunction");
-        }
-        for (const key in self.images) {
-          var reg = /^[0-9]+$/;
-          if (reg.test(key)) storeimg(self.images[key]);
-        }
-      }
-      self.pushPlant(id);
-    },
-    pushPlant: function(id, imgURL = null) {
-      const self = this;
-      connection.ref("plants/" + id).set(
-        {
-          seller: self.selectedSeller,
-          species: self.selectedSpecies,
-          subsp: self.selectedSubspecies,
-          imgURL: imgURL ? imgURL : null,
-          description: self.description ? self.description : null,
-          id: id
-        },
-        function(error) {
-          if (error) {
-            console.log("error", error);
-          } else {
-            console.log("successfull");
-            self.loading = false;
-            self.$router.push("/");
-          }
-        }
-      );
-    },
+
     increaseID: function() {
       this.aiID = parseInt(this.db[0].count) + 1;
       connection.ref("aiID").set({ count: String(this.aiID) });
@@ -225,9 +162,9 @@ export default {
       return isInArray;
     },
     processImage: function() {
-      this.images= null
+      this.images = null;
       this.images = this.$refs.imgInput.files;
-      console.log(this.$refs.imgInput, this.images)
+      console.log(this.$refs.imgInput, this.images);
     }
   }
 };

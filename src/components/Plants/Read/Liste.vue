@@ -34,14 +34,14 @@
                 </template>
             </v-layout>
         </v-container>
-        <plantDetailsDialog v-if="dialog" :dialog="dialog" :plant="active" @close="dialog = false" />
+        <Dialog v-if="dialog" :dialog="dialog" :plant="active" @close="dialog = false" />
     </div>
 </template>
 <script>
 /* eslint-disable */
 
 import { connection } from "@/components/firebase.js";
-import plantDetailsDialog from "@/components/utilitaries/plantDetailsDialog";
+import Dialog from "@/components/Plants/Read/Dialog";
 
 export default {
   name: "Liste",
@@ -52,7 +52,7 @@ export default {
     };
   },
   components: {
-    plantDetailsDialog: plantDetailsDialog
+    Dialog: Dialog
   },
   props: {
     plants: Array

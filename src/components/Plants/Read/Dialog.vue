@@ -47,7 +47,7 @@ import { connection, app } from "@/components/firebase.js";
 import Gallery from "@/components/utilitaries/Gallery.vue";
 
 export default {
-  name: "plantDetailsDialog",
+  name: "Dialog",
 
   data() {
     return {};
@@ -81,7 +81,18 @@ export default {
         "Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk "
       );
       if (oui) {
-        this.$firebaseRefs.plantsRef.child(id).remove();
+        for (const key in this.plantsRef[id].images) {
+          console.log(key)
+          if (this.plantsRef[id].images.hasOwnProperty(key)) {
+            const element = this.plantsRef[id].images[key];
+            app
+              .storage()
+              .ref(id.toString() + "/" + element.name)
+              .delete();
+          }
+        }
+
+        this.$firebaseRefs.plantsRef.child(id).remove();  
         this.dialog = false;
         this.$emit("close");
       }
