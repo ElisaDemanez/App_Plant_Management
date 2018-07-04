@@ -5,8 +5,8 @@
             <v-layout row wrap>
                 <template v-for="(plant) in plants">
                     <v-flex xs12 md6 :key="plant.id" @click="active=plant" @click.stop="dialog= true" class="my-1">
-                        <v-card :key="plant.id" avatar ripple style="min-height: 113px;" >
-                            <v-layout row style="min-height: 113px;" >
+                        <v-card :key="plant.id" avatar ripple style="min-height: 113px;">
+                            <v-layout row style="min-height: 113px;">
                                 <v-flex xs8>
                                     <v-card-title primary-title class="pt-2">
                                         <div class="body-2 font-size-bigger text-xs-left">
@@ -18,15 +18,7 @@
                                             <span class="subheading">{{plant.subspName}}</span>
                                         </div>
                                     </v-card-title>
-                                    <v-card-text class="pt-0">
-                                        <v-layout row justify-space-between>
-                                            <v-flex xs8 class="text-xs-left">
-                                                {{plant.exposure}}
-                                            </v-flex>
-                                            <v-flex xs4 class="text-xs-left">
-                                                {{plant.temperature}}°
-                                            </v-flex>
-                                        </v-layout>
+                                    <v-card-text class="pt-0 text-xs-left"> {{plant.exposure}}&nbsp; | &nbsp; {{plant.temperature}}°
                                     </v-card-text>
                                 </v-flex>
                                 <v-flex xs4>
