@@ -31,6 +31,11 @@ export default {
   },
   mounted() {
     this.loadPicture(this.file);
+  },
+  watch: {
+    file: function(newVal) {
+      this.loadPicture(newVal)
+    }
   }
 };
 </script>
