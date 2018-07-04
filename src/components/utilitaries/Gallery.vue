@@ -4,7 +4,7 @@
 <v-container fluid grid-list-sm>
           <v-layout row wrap>
             <v-flex v-for="(image,index) in images" :key="index" xs4>
-              <img :src="image.url" class="image" alt="lorem" width="100%" height="100%">
+              <img :src="image.url" class="image" alt="lorem" width="100%" height="100%" style="max-height: 152px; object-fit: cover;">
             </v-flex>
           </v-layout>
         </v-container>
