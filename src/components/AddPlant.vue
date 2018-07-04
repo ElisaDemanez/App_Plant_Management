@@ -26,9 +26,12 @@
                     <AutocompleteDropdown customId="Seller" v-model="selectedSeller" :prefilledValue="sellerIDToUpdate" :prefilledText="sellerNameToUpdate"
                         :UnfilteredData="sellersRef" :linkAdd="'AjouterMisc'" :linkAddParams="'sellers'" />
                 </v-flex>
+                <v-flex xs10 offset-xs1>
+                    <v-text-field id='description' textarea rows="1" auto-grow v-model='description' label='Additional infos' />
+                </v-flex>                
             </v-layout>
 
-            <v-text-field id='description' v-model='description' label='Additional infos' />
+
 
             <label for="photo"></label>
             <input type="file" id="photo" accept="image/*" ref="imgInput" multiple @change="processImage">
@@ -154,14 +157,12 @@ export default {
       if (this.images) {
         function storeimg(image) {
           var storedIMG = app.storage().ref(id + "/" + image.name);
-          console.log("function");
           storedIMG
             .put(image)
             .then(function() {
               return storedIMG.getDownloadURL();
             })
             .then(function(urli) {
-              console.log("lastpromise");
               connection.ref("plants/" + id + "/images/").push(
                 {
                   name: image.name,
@@ -182,9 +183,7 @@ export default {
           var reg = /^[0-9]+$/;
           if (reg.test(key)) storeimg(self.images[key]);
         }
-        console.log("ici");
       }
-      console.log("là");
       self.pushPlant(id);
     },
     pushPlant: function(id, imgURL = null) {
@@ -226,7 +225,9 @@ export default {
       return isInArray;
     },
     processImage: function() {
+      this.images= null
       this.images = this.$refs.imgInput.files;
+      console.log(this.$refs.imgInput, this.images)
     }
   }
 };
