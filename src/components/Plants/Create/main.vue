@@ -28,18 +28,17 @@
                 </v-flex>
                 <v-flex xs10 offset-xs1>
                     <v-text-field id='description' textarea rows="1" auto-grow v-model='description' label='Additional infos' />
-                </v-flex>                
+                </v-flex>
             </v-layout>
-
-
-
-            <label for="photo"></label>
+<gallery v-if="$route.params.plantToUpdate != null " :imagesObj="$route.params.plantToUpdate.images"/>
             <input type="file" id="photo" accept="image/*" ref="imgInput" multiple @change="processImage">
             <v-container fluid grid-list-sm>
-            <v-layout row wrap>
-            <!-- problem, only loading on first upload. loop is not redoing itself-->
-            <ImagePreview v-for="(file, index) in images" :file="file" v-if="file" v-bind:key="index" />
-            </v-layout></v-container>
+                <v-layout row wrap>
+
+                    <ImagePreview v-for="(file, index) in images" :file="file" v-if="file" v-bind:key="index" />
+                </v-layout>
+            </v-container>
+
             <div class="text-xs-center">
                 <v-progress-circular indeterminate v-if="loading" color="primary"></v-progress-circular>
             </div>
@@ -57,6 +56,7 @@ import AutocompleteDropdown from "@/components/utilitaries/AutocompleteDropdown.
 import submitButtons from "@/components/utilitaries/submitButtons";
 import ImagePreview from "@/components/Plants/Create/ImagePreview";
 import setPlant from "@/components/Plants/Create/createUpdate.js";
+import gallery from "@/components/Plants/Create/gallery";
 
 export default {
   name: "Ajouter",
@@ -64,7 +64,8 @@ export default {
   components: {
     AutocompleteDropdown,
     submitButtons,
-    ImagePreview
+    ImagePreview,
+    gallery
   },
 
   data() {
@@ -164,7 +165,6 @@ export default {
     processImage: function() {
       this.images = null;
       this.images = this.$refs.imgInput.files;
-      console.log(this.$refs.imgInput, this.images);
     }
   }
 };
