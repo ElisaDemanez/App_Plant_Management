@@ -21,7 +21,15 @@
                     <h4 class="primary--text mb-1" v:if="plant.description">Details</h4>
                     <p> {{plant.description}}</p>
                          <h4 class="primary--text mb-1" v:if="plant.images">Gallery</h4>
-                         <Gallery :images="plant.images"/>
+                         <!-- <Gallery :images="plant.images"/> -->
+                          <lightbox
+                          id="mylightbox"
+                          :images="images"
+                          :image_class=" 'img-responsive img-rounded' "
+                          :album_class=" 'my-album-class' "
+                        :options="options"> 
+                        </lightbox>
+      
                 </v-card-text>
 
                 <v-card-actions>
@@ -45,18 +53,26 @@
 
 import { connection, app } from "@/components/firebase.js";
 import Gallery from "@/components/utilitaries/Gallery.vue";
+import Lightbox from "vue-simple-lightbox";
 
 export default {
   name: "Dialog",
 
   data() {
-    return {};
+    return {
+      options: {
+        closeText: "X"
+      }
+    };
   },
   props: {
     dialog: Boolean,
     plant: Object
   },
-  components: { Gallery },
+  components: {
+    Gallery,
+    Lightbox
+  },
   firebase: {
     db: {
       source: connection.ref(),
@@ -72,6 +88,18 @@ export default {
     plantDescription: function() {
       this.$bindAsObject("user", connection.ref("plants").child(this.plant.id));
       return this.user.description;
+    },
+    images: function() {
+      var temp = [];
+      for (const key in this.plant.images) {
+        if (this.plant.images.hasOwnProperty(key)) {
+          const element = this.plant.images[key];
+          console.log(key, element);
+          temp.push({ src: element.url });
+        }
+      }
+      console.log(temp);
+      return temp;
     }
   },
   methods: {
@@ -82,7 +110,7 @@ export default {
       );
       if (oui) {
         for (const key in this.plantsRef[id].images) {
-          console.log(key)
+          console.log(key);
           if (this.plantsRef[id].images.hasOwnProperty(key)) {
             const element = this.plantsRef[id].images[key];
             app
@@ -92,7 +120,7 @@ export default {
           }
         }
 
-        this.$firebaseRefs.plantsRef.child(id).remove();  
+        this.$firebaseRefs.plantsRef.child(id).remove();
         this.dialog = false;
         this.$emit("close");
       }
@@ -115,11 +143,21 @@ export default {
 };
 </script>
 
-<style scoped >
+<style >
 .weight-100 {
   font-weight: 100 !important;
 }
 .weight-800 {
   font-weight: 800 !important;
+}
+
+.my-album-class {
+  display: flex !important;
+  flex-wrap: wrap
+}
+
+.my-gallery a img {
+  object-fit: cover;
+  width: 100%;
 }
 </style>

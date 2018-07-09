@@ -34,14 +34,26 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
 }
+* :not(.material-icons){
+  font-family: "Avenir", Helvetica, Arial, sans-serif !important;
+}
 h2 {
   font-weight: 100 !important;
 }
 
 @media (max-width: 960px) {
-   .body-container {
-     padding-bottom: 13vh !important;
-  } 
+  .body-container {
+    padding-bottom: 13vh !important;
+  }
+}
+.my-album-class {
+
+  min-height: 150px!important;
 }
 
+.my-gallery a img {
+
+height: 100px;
+object-fit: cover;
+}
 </style>
