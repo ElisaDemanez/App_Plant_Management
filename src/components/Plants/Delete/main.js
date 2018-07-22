@@ -1,8 +1,8 @@
 import { connection, app } from "@/components/firebase.js";
+import deleteImage from "@/components/Images/main.js";
 
 
 function deletePlant(self, id) {
-  console.log('bjr', self)
 
   // // Known bug : unexplained : On computer, with mobiel display : confirm is not fired and always fake
   var oui = confirm(
@@ -12,10 +12,7 @@ function deletePlant(self, id) {
     for (const key in self.plantsRef[id].images) {
       if (self.plantsRef[id].images.hasOwnProperty(key)) {
         const element = self.plantsRef[id].images[key];
-        app
-          .storage()
-          .ref(id.toString() + "/" + element.name)
-          .delete();
+        deleteImage(id, element.name)
       }
     }
 
