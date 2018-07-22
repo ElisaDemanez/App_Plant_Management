@@ -9,6 +9,7 @@
                 </ul>
             </p>
             <p v-if="existingID"> Modifier la plante n° {{existingID}}</p>
+                 <h4 class="primary--text text-xs-left">Infos</h4>
             <v-layout wrap>
                 <v-flex xs12 sm8 md6 lg6 xl4>
                     <AutocompleteDropdown customId="Species" v-model="selectedSpecies" :prefilledValue="speciesIDToUpdate" :prefilledText="speciesNameToUpdate"
@@ -30,7 +31,14 @@
                     <v-text-field id='description' textarea rows="1" auto-grow v-model='description' label='Additional infos' />
                 </v-flex>
             </v-layout>
-<gallery v-if="$route.params.plantToUpdate != null " :imagesObj="$route.params.plantToUpdate.images"/>
+
+            <v-container v-if="typeof $route.params.plantToUpdate != 'undefined'" v-bind="{ [`grid-list-xl`]: true }" fluid>
+            <h4 class="primary--text text-xs-left">Images</h4>
+<!-- // yeah -->
+               
+<ImagesUpdate/>  
+            </v-container>
+
             <input type="file" id="photo" accept="image/*" ref="imgInput" multiple @change="processImage">
             <v-container fluid grid-list-sm>
                 <v-layout row wrap>
@@ -56,7 +64,7 @@ import AutocompleteDropdown from "@/components/utilitaries/AutocompleteDropdown.
 import submitButtons from "@/components/utilitaries/submitButtons";
 import ImagePreview from "@/components/Plants/Create/ImagePreview";
 import setPlant from "@/components/Plants/Create/createUpdate.js";
-import gallery from "@/components/Plants/Create/gallery";
+import ImagesUpdate from "@/components/Plants/Update/Images";
 
 export default {
   name: "Ajouter",
@@ -65,7 +73,7 @@ export default {
     AutocompleteDropdown,
     submitButtons,
     ImagePreview,
-    gallery
+    ImagesUpdate
   },
 
   data() {
