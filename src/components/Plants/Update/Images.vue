@@ -1,7 +1,7 @@
 <template>
     <v-layout row wrap>
  
-        <v-flex xs3 sm2 v-for="(file, index) in $route.params.plantToUpdate.images" v-bind:key="index">
+        <v-flex xs3 sm2 v-for="(file, index) in images" v-bind:key="index">
       
             <v-card>
                 <v-card-media :src="file.url" height="100px" width="100px" class="zoom_on_hover">
@@ -16,14 +16,14 @@
 </template>
 <script>
 /* eslint-disable */
-import { connection,app } from "@/components/firebase.js";
-
+import { connection, app } from "@/components/firebase.js";
 import deleteImage from "@/components/Images/main.js";
 export default {
   name: "ImagesUpdate",
   data() {
     return {
-      plantID: this.$route.params.plantToUpdate.id.toString()
+      plantID: this.$route.params.plantToUpdate.id.toString(),
+      images: this.$route.params.plantToUpdate.images
     };
   },
 
@@ -34,20 +34,16 @@ export default {
       if (confirmation) {
         connection.ref("plants/" + self.plantID + "/images/" + index).remove();
 
-        deleteImage(self.plantID, file.name)
-         console.log('ici, besoin refresh');
-          // this.$router.push({
-          //   name: "Ajouter",
-          //   params: {
-          //     id: plantID,
-          //     plantToUpdate: connection.ref("plants/" + plantID)
-          //   }
-          // })
-    
+        deleteImage(self.plantID, file.name);
+
+        this.$bindAsObject(
+          "newplant",
+          connection.ref("plants").child(self.plantID)
+        );
+        this.images = this.newplant.images;
       }
     }
-  },
-  watch: {}
+  }
 };
 </script>
 
