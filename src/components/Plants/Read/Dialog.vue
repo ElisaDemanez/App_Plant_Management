@@ -20,16 +20,8 @@
                     <p class="grey--text text--darken-3 subheading">Exposure : {{plant.exposure}}</p>
                     <h4 class="primary--text mb-1" v:if="plant.description">Details</h4>
                     <p> {{plant.description}}</p>
-                         <h4 class="primary--text mb-1" v:if="plant.images">Gallery</h4>
-                         <!-- <Gallery :images="plant.images"/> -->
-                          <lightbox
-                          id="mylightbox"
-                          :images="images"
-                          :image_class=" 'img-responsive img-rounded' "
-                          :album_class=" 'my-album-class' "
-                        :options="options"> 
-                        </lightbox>
-      
+                      <h4 class="primary--text mb-1" v:if="plant.images">Gallery</h4>
+                         
                 </v-card-text>
 
                 <v-card-actions>
@@ -38,7 +30,7 @@
                     <v-btn @click="updatePlant(plant)" icon>
                         <v-icon color="primary">update</v-icon>
                     </v-btn>
-                    <v-btn @click="deletePlant(plant.id)" icon>
+                    <v-btn @click="deletePl(plant.id)" icon>
                         <v-icon color="deep-orange darken-2">delete</v-icon>
                     </v-btn>
 
@@ -52,8 +44,7 @@
 /* eslint-disable */
 
 import { connection, app } from "@/components/firebase.js";
-import Gallery from "@/components/utilitaries/Gallery.vue";
-import Lightbox from "vue-simple-lightbox";
+import  deletePlant from "@/components/Plants/Delete/main.js";
 
 export default {
   name: "Dialog",
@@ -69,10 +60,7 @@ export default {
     dialog: Boolean,
     plant: Object
   },
-  components: {
-    Gallery,
-    Lightbox
-  },
+  components: {},
   firebase: {
     db: {
       source: connection.ref(),
@@ -88,43 +76,14 @@ export default {
     plantDescription: function() {
       this.$bindAsObject("user", connection.ref("plants").child(this.plant.id));
       return this.user.description;
-    },
-    images: function() {
-      var temp = [];
-      for (const key in this.plant.images) {
-        if (this.plant.images.hasOwnProperty(key)) {
-          const element = this.plant.images[key];
-          console.log(key, element);
-          temp.push({ src: element.url });
-        }
-      }
-      console.log(temp);
-      return temp;
     }
   },
   methods: {
-    deletePlant: function(id) {
-      // // Known bug : unexplained : On computer, with mobiel display : confirm is not fired and always fake
-      var oui = confirm(
-        "Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk "
-      );
-      if (oui) {
-        for (const key in this.plantsRef[id].images) {
-          console.log(key);
-          if (this.plantsRef[id].images.hasOwnProperty(key)) {
-            const element = this.plantsRef[id].images[key];
-            app
-              .storage()
-              .ref(id.toString() + "/" + element.name)
-              .delete();
-          }
-        }
-
-        this.$firebaseRefs.plantsRef.child(id).remove();
-        this.dialog = false;
-        this.$emit("close");
-      }
+    deletePl: function(id) {
+      console.log('ici')
+      deletePlant(this, id);
     },
+
     updatePlant: function(plant) {
       this.$router.push({
         name: "Ajouter",
@@ -153,7 +112,7 @@ export default {
 
 .my-album-class {
   display: flex !important;
-  flex-wrap: wrap
+  flex-wrap: wrap;
 }
 
 .my-gallery a img {
