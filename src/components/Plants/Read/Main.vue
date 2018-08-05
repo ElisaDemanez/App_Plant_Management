@@ -73,17 +73,14 @@ export default {
       var plantsObject = this.plantsRef[".value"];
       
 
-      console.log("here", plantsObject, Object.keys(plantsObject))
       var keys = Object.keys(plantsObject).filter(function(key) {
         return plantsObject[key];
       });
 
       for (let index = 0; index < keys.length; index++) {
-        console.log("index", index);
         const element = keys[index];
         if (typeof plantsObject[element] != "string" && plantsObject[element]) {
           var plantObj = plantsObject[element];
-          // console.log("ere",plantsObject)
           // else for the last page, it bugs
           if (typeof plantObj !== "undefined" && element !== ".key") {
             this.completePlantInfos(plantObj);
@@ -154,7 +151,6 @@ export default {
         self.sortbyId(plantsArray);
         // this.activePage = 1;
       }
-      console.log(plantsArray)
       return plantsArray;
     },
     sellersName: function() {
@@ -171,7 +167,6 @@ export default {
   },
   methods: {
     completePlantInfos: function(plantObj) {
-      // console.log(this.speciesRef,plantObj.species,)
       plantObj["speciesName"] = this.speciesRef[plantObj.species].name;
       plantObj["sellerName"] = this.sellersRef[plantObj.seller].name;
       var subsp = this.speciesRef[plantObj.species][plantObj.subsp];

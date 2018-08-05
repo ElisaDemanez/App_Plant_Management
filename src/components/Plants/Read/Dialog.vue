@@ -92,11 +92,9 @@ export default {
       for (const key in this.plant.images) {
         if (this.plant.images.hasOwnProperty(key)) {
           const element = this.plant.images[key];
-          console.log(key, element);
           temp.push({ src: element.url, title : element.name });
         }
       }
-      console.log(temp);
       return temp;
     }
   },
