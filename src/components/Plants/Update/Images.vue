@@ -41,7 +41,6 @@ export default {
   methods: {
     deleteImg: function(file, index) {
       var self = this;
-      console.log(self)
       var confirmation = confirm("Do you really want to delete the image ?");
       if (confirmation) {
         connection.ref("plants/" + self.plantID + "/images/" + index).remove();

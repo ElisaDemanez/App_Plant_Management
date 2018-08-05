@@ -46,14 +46,5 @@ h2 {
     padding-bottom: 13vh !important;
   }
 }
-.my-album-class {
 
-  min-height: 150px!important;
-}
-
-.my-gallery a img {
-
-height: 100px;
-object-fit: cover;
-}
 </style>

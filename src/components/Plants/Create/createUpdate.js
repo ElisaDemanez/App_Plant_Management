@@ -28,9 +28,9 @@ function setPlant(self) {
             },
             function (error) {
               if (error) {
-                console.log("error", error);
+                console.log("error image ", error);
               } else {
-                console.log("successfull");
+                console.log("successfull image");
               }
             }
           );

@@ -1,7 +1,7 @@
 <template>
     <div>
       
- <!--alll credits to https://designhammer.com/blog/reusable-vuejs-components-part-3-autocomplete-dropdown  -->
+ <!--all credits to https://designhammer.com/blog/reusable-vuejs-components-part-3-autocomplete-dropdown  -->
   <div class="dropdown" :class="{'open' : open }" >
     <v-layout row wrap>
       <v-flex xs10>
