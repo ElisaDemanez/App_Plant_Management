@@ -9,9 +9,10 @@ function deletePlant(self, id) {
     "Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk "
   );
   if (oui) {
-    for (const key in self.plantsRef[id].images) {
-      if (self.plantsRef[id].images.hasOwnProperty(key)) {
-        const element = self.plantsRef[id].images[key];
+    var plantRef = self.plantsRef[".value"][id]
+    for (const key in plantRef.images) {
+      if (plantRef.images.hasOwnProperty(key)) {
+        const element = plantRef.images[key];
         deleteImage(id, element.name)
       }
     }

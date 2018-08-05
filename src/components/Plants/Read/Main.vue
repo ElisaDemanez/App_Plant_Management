@@ -18,9 +18,7 @@
           label="Filter by : "
         ></v-select>
       </v-flex>
-      
-
-    </v-layout>
+     </v-layout>
 
       <Liste :plants="plants" />
 
@@ -32,7 +30,6 @@
 
 import { connection } from "@/components/firebase.js";
 import Liste from "@/components/Plants/Read/Liste";
-
 
 export default {
   name: "showPlant",
@@ -48,13 +45,11 @@ export default {
         { name: "ID Ascending", value: "IDasc" },
         { name: "Temp. Descending", value: "TempDesc" },
         { name: "Temp. Ascending", value: "TempAsc" }
-      ],
-
+      ]
     };
   },
   components: {
-    Liste, 
-    
+    Liste
   },
   firebase: {
     db: connection.ref(),
@@ -75,17 +70,20 @@ export default {
     plantsCompleted: function() {
       var plantsArray = {};
       var self = this;
-      var plantsObject = this.plantsRef;
+      var plantsObject = this.plantsRef[".value"];
+      
 
+      console.log("here", plantsObject, Object.keys(plantsObject))
       var keys = Object.keys(plantsObject).filter(function(key) {
         return plantsObject[key];
       });
-      for (let index = 0; index < keys.length; index++) {
-        const element = keys[index];
 
+      for (let index = 0; index < keys.length; index++) {
+        console.log("index", index);
+        const element = keys[index];
         if (typeof plantsObject[element] != "string" && plantsObject[element]) {
           var plantObj = plantsObject[element];
-
+          // console.log("ere",plantsObject)
           // else for the last page, it bugs
           if (typeof plantObj !== "undefined" && element !== ".key") {
             this.completePlantInfos(plantObj);
@@ -99,7 +97,7 @@ export default {
       let self = this;
       let filtered = Object.keys(this.plantsCompleted).filter(function(index) {
         // Filter on title
-        var plant = self.plantsRef[index];
+        var plant = self.plantsRef[".value"][index];
         if (plant.id) {
           let species = self.normlizeText(plant.speciesName);
           let subsp = self.normlizeText(plant.subspName);
@@ -132,7 +130,7 @@ export default {
     plants: function() {
       var plantsArray = [];
       var self = this;
-      var plantsObject = this.plantsRef;
+      var plantsObject = this.plantsRef[".value"];
       var keys = Object.keys(plantsObject).filter(function(key) {
         return self.filteredPlantsIndexes.includes(key);
       });
@@ -156,6 +154,7 @@ export default {
         self.sortbyId(plantsArray);
         // this.activePage = 1;
       }
+      console.log(plantsArray)
       return plantsArray;
     },
     sellersName: function() {
@@ -171,8 +170,8 @@ export default {
     }
   },
   methods: {
-    
     completePlantInfos: function(plantObj) {
+      // console.log(this.speciesRef,plantObj.species,)
       plantObj["speciesName"] = this.speciesRef[plantObj.species].name;
       plantObj["sellerName"] = this.sellersRef[plantObj.seller].name;
       var subsp = this.speciesRef[plantObj.species][plantObj.subsp];
