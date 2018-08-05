@@ -21,6 +21,13 @@
                     <h4 class="primary--text mb-1" v:if="plant.description">Details</h4>
                     <p> {{plant.description}}</p>
                       <h4 class="primary--text mb-1" v:if="plant.images">Gallery</h4>
+                       <lightbox
+                          id="mylightbox"
+                          :images="images"
+                          :image_class=" 'img-responsive img-rounded' "
+                          :album_class=" 'my-album-class' "
+                        :options="options"> 
+                        </lightbox>
                          
                 </v-card-text>
 
@@ -45,6 +52,7 @@
 
 import { connection, app } from "@/components/firebase.js";
 import  deletePlant from "@/components/Plants/Delete/main.js";
+import Lightbox from "vue-simple-lightbox";
 
 export default {
   name: "Dialog",
@@ -60,7 +68,9 @@ export default {
     dialog: Boolean,
     plant: Object
   },
-  components: {},
+  components: {
+    Lightbox
+  },
   firebase: {
     db: {
       source: connection.ref(),
@@ -76,11 +86,22 @@ export default {
     plantDescription: function() {
       this.$bindAsObject("user", connection.ref("plants").child(this.plant.id));
       return this.user.description;
+    },
+  images: function() {
+      var temp = [];
+      for (const key in this.plant.images) {
+        if (this.plant.images.hasOwnProperty(key)) {
+          const element = this.plant.images[key];
+          console.log(key, element);
+          temp.push({ src: element.url, title : element.name });
+        }
+      }
+      console.log(temp);
+      return temp;
     }
   },
   methods: {
     deletePl: function(id) {
-      console.log('ici')
       deletePlant(this, id);
     },
 
@@ -111,12 +132,20 @@ export default {
 }
 
 .my-album-class {
-  display: flex !important;
-  flex-wrap: wrap;
+
+  min-height: 150px!important;
 }
 
 .my-gallery a img {
-  object-fit: cover;
-  width: 100%;
+
+/* height: 100px; */
+object-fit: cover;
+width:100px !important;
 }
+
+.my-album-class {
+  display: flex !important;
+  flex-wrap: wrap
+}
+
 </style>
