@@ -28,7 +28,7 @@
                             </v-layout>
           </v-container>
 
-          <Liste :plants="plants" />
+          <Liste v-else :plants="plants" />
 
   </div>
 
@@ -43,7 +43,6 @@ export default {
   name: "showPlant",
   data() {
     return {
-      plants: [],
       additionalFilters: false,
       totalPlantCount: 0,
       searchTxt: "",
@@ -65,7 +64,6 @@ export default {
     db: connection.ref()
   },
   created() {
-    var plantsArray = [];
     var self = this;
     this.$bindAsObject("plantsObject", connection.ref("plants"), null, () => {
       this.$bindAsObject(
@@ -78,47 +76,63 @@ export default {
             connection.ref("sellers"),
             null,
             () => {
-              var keys = Object.keys(self.plantsObject[".value"]).filter(
-                function(key) {
-                  return self.filteredPlantsIndexes.includes(key);
-                }
-              );
-
-              this.totalPlantCount = keys.length;
-
-              for (let index = 0; index < keys.length; index++) {
-                const element = keys[index];
-
-                if (
-                  typeof self.plantsObject[".value"][element] != "string" &&
-                  self.plantsObject[".value"][element]
-                ) {
-                  var plantObj = self.plantsObject[".value"][element];
-
-                  // else for the last page, it bugs
-                  if (typeof plantObj !== "undefined" && element !== ".key") {
-                    console.log(plantObj);
-                    self.completePlantInfos(plantObj);
-                    plantsArray.push(plantObj);
-                  }
-                }
-              }
-              if (self.orderBy) {
-                self.sortbyId(plantsArray);
-              }
               self.loading = false;
+
             }
           );
         }
       );
     });
-    console.log("plants", plantsArray);
-    this.plants = plantsArray;
   },
   computed: {
+    sellersName: function() {
+      var temp = [];
+      var self = this;
+      for (const key in self.sellersObject) {
+        if (self.sellersObject.hasOwnProperty(key)) {
+          const element = self.sellersObject[key];
+          if (typeof element.name !== "undefined") temp.push(element.name);
+        }
+      }
+      return temp;
+    },
+
+    plants: function() {
+      var plantsArray = [];
+      var self = this;
+
+      var keys = Object.keys(self.plantsObject[".value"]).filter(function(key) {
+        return self.filteredPlantsIndexes.includes(key);
+      });
+
+      this.totalPlantCount = keys.length;
+
+      for (let index = 0; index < keys.length; index++) {
+        const element = keys[index];
+
+        if (
+          typeof self.plantsObject[".value"][element] != "string" &&
+          self.plantsObject[".value"][element]
+        ) {
+          var plantObj = self.plantsObject[".value"][element];
+
+          // else for the last page, it bugs
+          if (typeof plantObj !== "undefined" && element !== ".key") {
+            self.completePlantInfos(plantObj);
+            plantsArray.push(plantObj);
+          }
+        }
+      }
+      if (self.orderBy) {
+        self.sortbyId(plantsArray);
+      }
+      return plantsArray;
+    },
     filteredPlantsIndexes: function() {
       let self = this;
-      let filtered = Object.keys(this.plantsCompleted).filter(function(index) {
+      let filtered = Object.keys(this.plantsCompleted()).filter(function(
+        index
+      ) {
         // Filter on title
         var plant = self.plantsObject[".value"][index];
         if (plant.id) {
@@ -149,7 +163,11 @@ export default {
         }
       });
       return filtered;
-    },
+    }
+  },
+  methods: {
+    processPlants: function() {},
+
     plantsCompleted: function() {
       var plantsArray = {};
       var self = this;
@@ -173,21 +191,7 @@ export default {
       }
       return plantsArray;
     },
-    sellersName: function() {
-      var temp = [];
-      var self = this;
-      for (const key in self.sellersObject) {
-        if (self.sellersObject.hasOwnProperty(key)) {
-          const element = self.sellersObject[key];
-          if (typeof element.name !== "undefined") temp.push(element.name);
-        }
-      }
-      return temp;
-    }
-  },
-  methods: {
     completePlantInfos: function(plantObj) {
-      console.log(this.speciesObject, plantObj.species);
       plantObj["speciesName"] = this.speciesObject[plantObj.species].name;
       plantObj["sellerName"] = this.sellersObject[plantObj.seller].name;
       var subsp = this.speciesObject[plantObj.species][plantObj.subsp];
@@ -216,9 +220,6 @@ export default {
       str = str.toLowerCase().trim();
       // Remove accents
       return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    },
-    plantsReady: function() {
-      console.log(callback);
     }
   }
 };

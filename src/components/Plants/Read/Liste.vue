@@ -63,12 +63,12 @@ export default {
       asObject: true
     }
   },
-  computed: {},
+
   methods: {
     deletePlant: function(id) {
       // // Known bug : unexplained : On computer, with mobiel display : confirm is not fired and always fake
       var oui = confirm(
-        "Its like, gonna be gone, like forever. Like you sure its really dead ? You could like pop it in a lil bit of water or like idk "
+        "Are you really sure it's dead ? "
       );
       if (oui) {
         this.$firebaseRefs.plantsRef.child(id).remove();
