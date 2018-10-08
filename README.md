@@ -1,6 +1,6 @@
 # pwa_plant_management
 
-> A personnal project. 
+A personnal project. 
 A plant can have different attributes : Seller, species and subspecies name,informations,and pictures. Each of them has a unique ID in order to be able to write it on their label, and find their complementary infos easily. You can manage the pictures of each of the plants in order to keep track of their evolutions.
 You can sort them by : Id, frost resistance, and exposure. 
 Since I mainly have succulents,those criterias allows me to put plants together more easily. 
