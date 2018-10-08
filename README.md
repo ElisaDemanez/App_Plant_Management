@@ -1,10 +1,10 @@
 # pwa_plant_management
 
-> A personnal project. I'm trying to develop a plant managing simple application for my own need(a PWA is the super ambitious goal. )
-
-I first want to be able to order them by species. A plant could have different attributes : Seller, date of purchase, sub species name. Each of them has a unique ID in order to be able to write it on their label, and find their complementary infos easily.
-Since I mainly have succulents, later on I'd like to be able to sort them by frost resistance and exposure, allowing me to put plants together more easily. 
-
+> A personnal project. 
+A plant can have different attributes : Seller, species and subspecies name,informations,and pictures. Each of them has a unique ID in order to be able to write it on their label, and find their complementary infos easily. You can manage the pictures of each of the plants in order to keep track of their evolutions.
+You can sort them by : Id, frost resistance, and exposure. 
+Since I mainly have succulents,those criterias allows me to put plants together more easily. 
+There is also a search bar on the id and full name. 
 
 ## Installation : 
 
@@ -36,5 +36,3 @@ npm run e2e
 # run all tests
 npm test
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
