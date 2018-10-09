@@ -1,11 +1,11 @@
 # pwa_plant_management
 
 A personnal project. </br>
-A plant can have different attributes : Seller, species and subspecies name,informations,and pictures. Each of them has a unique ID in order to be able to write it on their label, and find their complementary infos easily. You can manage the pictures of each of the plants in order to keep track of their evolutions. </br>
+A plant can have different attributes : Seller, species and subspecies name, informations,and pictures. Each of them has a unique ID in order to be able to write it on their label, and find their complementary infos easily. You can manage the pictures of each of the plants in order to keep track of their evolutions. </br>
 You can sort them by : Id, frost resistance, and exposure. </br>
 Since I mainly have succulents,those criterias allows me to put plants together more easily. </br>
-There is also a search bar on the id and full name. </br>
-/!\ Still need a lot of cleaning ! </br>
+There's also a search bar on the id and full name. </br>
+/!\ Still needs a lot of cleaning ! </br>
 Online version : https://plant-management.firebaseapp.com/#/
 
 ## Installation : 
