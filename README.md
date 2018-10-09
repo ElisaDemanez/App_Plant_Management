@@ -5,6 +5,8 @@ A plant can have different attributes : Seller, species and subspecies name,info
 You can sort them by : Id, frost resistance, and exposure. </br>
 Since I mainly have succulents,those criterias allows me to put plants together more easily. </br>
 There is also a search bar on the id and full name. </br>
+/!\ Still need a lot of cleaning ! </br>
+Online version : https://plant-management.firebaseapp.com/#/
 
 ## Installation : 
 
